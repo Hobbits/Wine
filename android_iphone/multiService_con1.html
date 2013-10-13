@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>设计</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/album.css">
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+</head>
+<body data-ng-controller="designCtrl" class="um-vp" id="designHome" class="tiliing">
+
+<!--content开始-->
+
+<style ng-bind-html="sectionStyle"></style>
+<style ng-bind-html="wrapStyle"></style>
+<div class="wrap">
+
+    <section class="items" data-ng-repeat="design in designs" ng-swipe-left="swipe('left')" ng-swipe-right="swipe('right')">
+        <div class="tiliing">
+            <ul class="desBook">
+                <li data-ng-repeat="d in design">
+                    <a go-to-Article="{{d.aid}}">
+                        <img ng-src="{{ imgRoot+d.picture }}" />
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+</div>
+<!--content结束-->
+
+<script>
+    zy_init();
+    var isAndroid=(function(){
+        return navigator.userAgent.indexOf("Android") > 0;
+    })();
+    defaultApp.controller("designCtrl",function($scope,$http){
+        var AllDesigns = [];
+        var ttItem=0;
+        $scope.curItem=0;
+        $scope.imgRoot=IMAGE_ROOT;
+        var iWidth=0;
+        var transformName='transform' in document.body.style ? 'transform' : 'webkitTransform';
+
+
+        $http({
+            method: 'GET',
+            url: APP_ACTION['GET_SERVICE_DESIGN'],
+            cache: true
+        }).success(function (data) {
+                    console.log(data);
+                    if(data.status=="ok" && data.result.length>0){
+                        var result = data.result;
+                        var itemStyle=document.getElementById('designHome').getBoundingClientRect();
+                        iWidth=itemStyle.width;
+                        ttItem=result.length;
+                        $scope.sectionStyle='section.items{width:'+iWidth+'px;}';
+                        $scope.wrapStyle='.wrap{width:'+iWidth*ttItem+'px;}';
+
+                        AllDesigns = result;
+                        $scope.designs = result.filter(function(arrEle, arrIndex){
+                            if(arrIndex == 0){
+                                return true;
+                            }
+                        });
+                    }else{
+                        uexWindow.toast(0, 5, data.result, 3000);
+                    }
+
+                })
+                .error(function () {
+                    uexWindow.toast(0, 5, '信息获取失败！', 3000);
+
+                });
+
+        $scope.swipe=function(dir){
+            var wrapObj=document.getElementsByClassName('wrap')[0];
+            var newX=0;
+
+            var setX=function(o){
+                newX=iWidth*$scope.curItem*(-1);
+                if(isAndroid){
+                    o.style.left=newX+'px';
+                }else{
+                    o.style[transformName]='translate3d('+newX+'px,0,0)';
+                }
+            };
+
+            if(dir=="left"){
+                if($scope.curItem<ttItem-1){
+                    $scope.designs = AllDesigns.filter(function(arrEle, arrIndex){
+                        if( arrIndex <= $scope.curItem+1){
+                            return true;
+                        }
+                    })
+                    $scope.curItem++;
+                    setX(wrapObj);
+                }
+            }else if(dir=="right"){
+                console.log($scope.designs);
+                if($scope.curItem>0){
+                    $scope.curItem--;
+                    setX(wrapObj);
+                }
+            }
+        }
+
+    })
+
+
+    document.getElementsByClassName('wrap')[0].addEventListener('touchmove',function(e){
+        e.stopPropagation();
+    }, false);
+
+    window.uexOnload = function(type){
+        angular.bootstrap(document,['defaultApp']);
+
+        if (!type) {
+            //
+        }
+        window.onorientationchange=window.onresize=function() {
+//            zy_resize("content",0,$$("header").offsetHeight);
+        }
+    }
+</script>
+</body>
+</html>
+

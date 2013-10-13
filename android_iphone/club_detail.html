@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>会所详情</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+    <style>
+        #content{padding: 1em;
+            text-align: center;}
+    </style>
+
+</head>
+<body data-ng-controller="clubDetailCtrl" class="um-vp c-wh fixHeader" ontouchstart>
+
+    <!--header开始-->
+    <header id="header" class="headerHeight">
+        <div class="headerInner">
+            <i class="lefticon" templarlink="back" data-trans="1"></i>
+            <h1 class="mid">主题会所</h1>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+
+     <!--content开始-->
+    <section id="content" class="ub-f1">
+        <h2 style="margin: 0.5em auto" ng-bind="club.club_name">xxxx会所</h2>
+
+        <div style="padding:0 .5em .5em .5em;">
+            <img ng-src="{{IMAGE_ROOT+club.club_pic}}">
+        </div>
+        <p style="margin-top: 1em" ng-bind="club.club_content">
+
+        </p>
+    </section>
+    <!--content结束-->
+</body>
+
+<script>
+zy_init();
+defaultApp.controller("clubDetailCtrl",function($scope,$http){
+    $scope.IMAGE_ROOT = IMAGE_ROOT;
+    $scope.club = {};
+    $http({
+        method: 'GET',
+        url: APP_ACTION['GET_CLUB_DETAIL'] + zy_parse()['id'],
+        params: null
+    }).success(function (data) {
+        console.log(data);
+        if(data.status == "ok") {
+            $scope.club = data.result[0];
+        }else{
+            uexWindow.toast(0,5,'获取文章详情失败！',3000);
+        }
+    }).error(function () {
+        uexWindow.toast(0,5,'获取文章详情失败！',3000);
+    });
+})
+
+window.uexOnload = function(type){
+    angular.bootstrap(document,['defaultApp']);
+    if (!type) {
+        //
+    }
+    window.onorientationchange=window.onresize=function()
+    {
+        zy_resize("content",0,$$("header").offsetHeight);
+    }
+}
+</script>
+</html>
+
+

@@ -1,0 +1,63 @@
+
+.im{
+	background-image: url('img/icon.png');
+}
+.im1{
+	background-image: url('img/icon1.png');
+}
+.im2{
+	background-image: url('img/icon2.png');
+}
+.im3{
+    background-image: url('img/tencent_logo.png');
+}
+.im4{
+    background-image: url('img/sina_logo.png');
+}
+.im5{
+    background-image: url('img/download.png');
+}
+.im-sina{
+    background-image: url('img/icon2.png');
+}
+.im-tencent{
+    background-image: url('img/tencent.png');
+}
+/*特价*/
+.im_spe{background-image:url(img/special_price.png);}
+/*小时钟图标*/
+.im_clock {background-image:url(images/sjpic.png);}
+/*商品价格*/
+.im_price {background-image:url(img/price.png);}
+/*商品简述*/
+.im_det {background-image:url(img/detail.png);}
+/*详细介绍*/
+.im_dec {background-image:url(img/decription.png);}
+/*所属店铺：*/
+.im_bel {background-image:url(img/belong_shop.png);}
+
+/*店铺介绍*/
+.im_shop_dec {background-image:url(img/shop_dec.png);}
+/*店铺联系人*/
+.im_shop_att{background-image:url(img/shop_att.png);}
+/*店铺联系电话*/
+.im_shop_cen {background-image:url(img/shop_cen.png);}
+/*联系地址*/
+.im_shop_add {background-image:url(img/shop_add.png);}
+
+/*狂葡萄园图标*/
+.im_pt { background-image: url('img/icon_vineyard.png'); }
+/*猜你喜欢图标*/
+.im_xh { background-image: url('img/icon_like.png'); }
+
+/*退出图标*/
+.im_logout { background-image: url('img/logout.png'); }
+/*公告栏图标*/
+.im_notice { background-image: url('img/notice.png'); }
+.im_ndetail { background-image: url('img/ndetail.png'); }
+
+
+
+
+
+

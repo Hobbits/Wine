@@ -1,0 +1,77 @@
+
+/*style*/
+.ui-box-spacing_ {
+	margin: 0.5em 0.6em;
+}
+.ui-shadow-pic
+{
+	position:absolute;left:6%;top:10%;width:80%;height:91%;-webkit-transform:skew(0deg,-7deg);background:rgba(0,0,0,0.1);
+}
+.ui-pic-border
+{
+	border:1px solid rgba(0,0,0,0.3);padding:4px;background:white
+}
+.pic-show{
+    left:0;
+    top:0;
+    background-color:#EEE;
+   
+}
+
+
+
+/*base*/
+.ui-body-d {
+	border: 1px solid #ccc;
+	color: #333;
+	text-shadow: 0 1px 0 #fff;
+	background: #fff
+}
+.ui-shadow {
+     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+     box-shadow: 0 1px 4px rgba(0, 0, 0, .3)
+ }
+
+.ui-mobile-viewport {
+	margin: 0;
+	overflow-x: hidden;
+	-webkit-text-size-adjust: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+}
+
+
+
+
+
+
+
+/*other*/
+ui-mobile, .ui-mobile body {
+height: 100%;
+}
+
+ui-mobile [data-role=page], .ui-mobile [data-role=dialog], .ui-page {
+top: 0;
+left: 0;
+width: 100%;
+min-height: 100%;
+max-height: 100%;
+position: absolute;
+display: none;
+border: 0;
+}
+
+.landscape,.landscape .ui-page {
+	min-height: 100%;
+}
+.ui-body-d{
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.ui-mobile .ui-page-active {
+	display: block;
+	overflow: visible
+}
+
+
+

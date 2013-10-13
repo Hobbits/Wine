@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>葡萄树</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+
+    <script src="js/module/1.2.0/angular.min.js"></script>
+
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+
+
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/album.css">
+    <link rel="stylesheet" href="css/font/css/fontello.css">
+    <style>
+        #title span{
+            line-height:0.8em;
+        }
+    </style>
+</head>
+<body data-ng-controller="grapetreeCtrl" id="grapetreeHome" class="tiliing">
+
+    <!--header开始-->
+    <header ng-show="headerisShowing" id="header" class="headerHeight">
+        <div class="headerInner">
+            <i templarlink="back" data-trans="1" class="lefticon"></i>
+
+            <i class="righticon">
+                <span style="display: inline-block" ng-click="download()" id='downloadIcon'>
+                 </span>
+                <span style="display: inline-block" ng-click="openShare()" class="icon-forward"></span>
+            </i>
+            <h1 id="title" class="mid"></h1>
+        </div>
+    </header>
+    <!--header结束-->
+    <!--content开始-->
+
+
+    <style ng-bind-html="sectionStyle"></style>
+    <style ng-bind-html="wrapStyle"></style>
+    <div class="wrap" ng-click="headerisShowing=!headerisShowing">
+
+
+        <section ng-repeat="item in items"
+                class="items" ng-swipe-left="swipe('left',$index)" ng-swipe-right="swipe('right',$index)">
+          <div ng-if="item.is_full" class="type_1 tiliing"
+               ng-style="{ backgroundImage: 'url({{imgRoot+item.img}})' }">
+              <div class="info">
+                  <h3 ng-cloak ng-bind="item.title">
+                  </h3>
+                  <p ng-cloak ng-bind="item.intro"></p>
+              </div>
+          </div>
+
+
+            <div ng-if="!item.is_full" class="type_2 tiliing">
+                <div class="banner marginHeaderHeight" >
+                    <img ng-src="{{imgRoot+item.img}}" />
+                </div>
+                <div class="info">
+                    <h3 ng-cloak ng-bind="item.title">
+                    </h3>
+                    <p ng-cloak ng-bind="item.intro"></p>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+    <!--content结束-->
+
+</body>
+<script>
+    zy_init();
+    var isAndroid=(function(){
+        return navigator.userAgent.indexOf("Android") > 0;
+    })();
+
+    defaultApp.controller("grapetreeCtrl",function($scope,$http){
+        var ttItem=0;
+        $scope.curItem=0;
+        $scope.imgRoot=IMAGE_ROOT;
+
+        var album=zy_parse()['t'];
+        (function(){
+            var title='';
+            switch(album) {
+                case 'eat':
+                    title='<span>吃<sup>+</sup></span>';
+                    break;
+                case 'wear':
+                    title='<span>衣<sup>+</sup></span>';
+                    break;
+                case 'cult':
+                    title='<span>文<sup>+</sup></span>';
+                    break;
+                default:
+                    title='葡萄树';
+                    break;
+            }
+
+            document.getElementById('title').innerHTML=title;
+        })()
+
+
+
+        var iWidth=0;
+        var transformName='transform' in document.body.style ? 'transform' : 'webkitTransform';
+
+        var downloadHtml='<i class="icon-down-circled2"></i>';
+        var downIconDom=document.getElementById('downloadIcon');
+        downIconDom.innerHTML=downloadHtml;
+
+        $http({
+            method: 'GET',
+            url: APP_ACTION['GET_ALBUMPHOTO']+album
+        }).success(function (data, status, headers, config) {
+                    if(data.status=="ok"){
+                        var itemStyle=document.getElementById('grapetreeHome').getBoundingClientRect();
+                        iWidth=itemStyle.width;
+                        ttItem=data.result.length;
+                        $scope.sectionStyle='section.items{width:'+iWidth+'px;}';
+                        $scope.wrapStyle='.wrap{width:'+iWidth*ttItem+'px;}';
+
+                        $scope.items=data.result;
+                    }else{
+                        uexWindow.toast(0, 5, data.result, 3000);
+
+                    }
+
+                })
+                .error(function (data, status, headers, config) {
+                    uexWindow.toast(0, 5, '信息获取失败！', 3000);
+
+                });
+
+
+
+        $scope.swipe=function(dir,item){
+            var wrapObj=document.getElementsByClassName('wrap')[0];
+             var newX=0;
+
+            var setX=function(o){
+                newX=iWidth*$scope.curItem*(-1);
+
+
+                if(isAndroid){
+                    o.style.left=newX+'px';
+                }else{
+                    o.style[transformName]='translate3d('+newX+'px,0,0)';
+                }
+
+            };
+
+             if(dir=="left"){
+                 if($scope.curItem<ttItem-1){
+                     $scope.curItem++;
+                     setX(wrapObj);
+                 }else{
+                     uexWindow.toast(0, 5, '已经最后一张', 2000);
+                 }
+             }else if(dir=="right"){
+                 if($scope.curItem>0){
+                     $scope.curItem--;
+                     setX(wrapObj);
+                 }else{
+                     uexWindow.toast(0, 5, '已经是第一张', 2000);
+                 }
+             }
+
+        };
+
+
+
+
+
+        $scope.openShare = function (){
+
+            var curItem=$scope.items[$scope.curItem];
+
+
+            //转到发送微博界面
+            var sendWeibo = function (p){
+                var appkey = '';
+                var url = null;
+                var title = encodeURIComponent(curItem['title'] || curItem['intro']);
+
+                var pic= encodeURI((IMAGE_ROOT+curItem['img']) || null);
+                if(p == 'sina'){
+                    appkey = "182940576";
+                } else if(p == 'tx'){
+                    appkey = "801377083";
+                }
+                localStorageServ.add("params" , {
+                    "url": url,
+                    "title": title,
+                    "pic":pic,
+                    "appkey": appkey
+                })
+                uexWindow.open("weibosend", "0", "weibosend.html", 2, "", "", "4", "275");
+            }
+
+            uexWindow.cbActionSheet = function(opId,dataType,data){
+                if(dataType==2){
+                    switch(parseInt(data)){
+                        case 0:         //新浪
+                        sendWeibo('sina')
+                        break;
+                        case 1:         //腾讯
+                        sendWeibo('tx');
+                        break;
+                    }
+                }
+            }
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                uexWindow.toast("0","5","errorCode:" + errorCode + "\n"+"errorInfo:" + errorInfo,2000);
+            }
+            var arr = ["新浪微博","腾讯微博"];
+            uexWindow.actionSheet("分享至","取消", arr );
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+        $scope.download=function(){
+            var inOpCode = 1;
+
+            var getFileName=function(url){
+                return url.substring(url.lastIndexOf('/')+1);
+            }
+
+
+            var downloadPath=IMAGE_ROOT+$scope.items[$scope.curItem].img;
+            var savedPath='wgt://data/photo/'+'pstdown_'+getFileName(downloadPath);
+
+            uexDownloaderMgr.createDownloader(inOpCode);
+
+
+                uexDownloaderMgr.onStatus = function(opCode,fileSize,percent,status){
+                    switch (status) {
+                        case 0:
+                            downIconDom.innerHTML=percent +"%";
+                            break;
+
+                        case 1:
+                            downIconDom.innerHTML=downloadHtml;
+                            alert("下载完成");
+                            uexDownloaderMgr.closeDownloader(opCode);
+                            break;
+                        case 2:
+                            downIconDom.innerHTML=downloadHtml;
+                            alert("下载失败");
+                            uexDownloaderMgr.closeDownloader(opCode);
+                            break;
+
+                    }
+
+                }
+                uexDownloaderMgr.cbCreateDownloader = function(opCode,dataType,data){
+                    if(data == 0){
+                        uexDownloaderMgr.download(inOpCode,downloadPath,savedPath,'0');
+                    }else{
+                        alert("创建失败");
+                    }
+
+                }
+
+                uexWidgetOne.cbError = function(opCode,errorCode,errorInfo){
+                    alert(errorInfo);
+                }
+
+
+        }
+
+    })
+
+    document.getElementsByClassName('wrap')[0].addEventListener('touchmove',function(e){
+        e.stopPropagation();
+    })
+
+    window.uexOnload = function(type){
+        angular.bootstrap(document,['defaultApp']);
+
+        if (!type) {
+            //
+        }
+        window.onorientationchange=window.onresize=function()
+        {
+//            zy_resize("content",0,$$("header").offsetHeight);
+        }
+    }
+</script>
+</html>
+

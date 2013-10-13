@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html ng-app="defaultApp" class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>荐</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/base-font/icon-base.css"/>
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+    <style type="text/css">
+        .recmarginFooterHeight {margin-bottom: 3.6em;}
+        .recfooterHeight {height:3em;}
+        .footerTab {position: relative;}
+        .footerTab h5 {
+            color: #FFF;
+            font-style: normal;
+            font-weight: normal;
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .footerTab .triangle-up {
+            position: absolute;
+            top:-0.6em;
+            left: 47%;
+            width: 0;
+            height: 0;
+        }
+        .footerTab.active,input[type="radio"]:checked+.footerTab{
+            background-color: #198419;
+        }
+        .footerTab.active,input[type="radio"]:checked+.footerTab .triangle-up{
+
+            border-left: 0.4em solid transparent;
+            border-right: 0.4em solid transparent;
+            border-bottom: 0.6em solid #198419;
+        }
+        .footerTab [class^="icon-"]:before,
+        .footerTab [class*=" icon-"]:before {
+            font-size: 1.7em;
+            display: block;
+            width: 100%;
+            text-align: center;
+            line-height: 120%;
+            margin-right: 0em;
+            margin-left: 0em;
+            padding-top: 0;
+        }
+    </style>
+</head>
+<body class="um-vp" ontouchstart>
+<div id="page_0" class="up ub ub-ver">
+    <!--header开始-->
+    <header id="header" class="uh">
+        <div class="headerInner" style="line-height: 1.5em;">
+            <i class="lefticon" templarlink="back" data-trans="1"></i>
+            <h1 class="mid">荐<sup>+</sup></h1>
+        </div>
+    </header>
+    <!--header结束-->
+
+
+
+    <!--content开始-->
+    <section id="content" class="ub-f1 recmarginFooterHeight"></section>
+    <!--content结束-->
+    <footer class="footerNav recfooterHeight">
+        <ul class="footerInner">
+            <input class="uhide" type="radio" checked="true" name="menus" id="menu1">
+            <li class="flexbox-center footerTab" onclick="menuSelected(1);"><span class="triangle-up"></span><h5 class="icon-zuixintuijian">最新推荐</h5></li>
+            <input class="uhide" type="radio" name="menus" id="menu2">
+            <li class="flexbox-center footerTab" onclick="menuSelected(2);"><span class="triangle-up"></span><h5 class="icon-jingpinyuedu">精品阅读</h5></li>
+            <input class="uhide" type="radio" name="menus" id="menu3">
+            <li class="flexbox-center footerTab" onclick="menuSelected(3);"><span class="triangle-up"></span><h5 class="icon-shenghuobibei">生活必备</h5></li>
+        </ul>
+    </footer>
+</div>
+</body>
+
+<script>
+    zy_init();
+    function radioSelect(id){
+        var ret = 0;
+        var e = $$(id);
+        if(e && !e.checked){
+            e.checked = true;
+            ret = 1;
+        }
+        return ret;
+    }
+    function menuSelected(i){
+        var filename = "";
+        switch(i){
+            case 1 :
+                filename = "recommend_con1.html";
+                break;
+            case 2 :
+                filename = "recommend_con2.html";
+                break;
+            case 3 :
+                filename = "recommend_con3.html";
+                break;
+        }
+        zy_con("content", filename, 0, $$("header").offsetHeight);
+        radioSelect('menu'+i);
+    }
+
+    window.uexOnload = function(type){
+        if (!type) {
+            menuSelected(1);
+        }
+        window.onorientationchange=window.onresize=function(){
+            zy_resize("content",0,$$("header").offsetHeight);
+        }
+    }
+</script>
+</html>
+

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>用户信息修改</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-input.css">
+    <link rel="stylesheet" href="css/ui-img.css">
+    <link rel="stylesheet" href="css/ui-list.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <link rel="stylesheet" href="css/ui-res.css">
+    <script src="js/zy_control.js"></script>
+    <script src="js/module/jquery.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+    <script src="js/jquery.form.js"></script>
+    <script src="js/route.js"></script>
+    <link rel="stylesheet" href="css/default.css" />
+    <script charset="utf-8" src="js/kindeditor-min.js"></script>
+    <script charset="utf-8" src="js/zh_CN.js"></script>
+    <script type="text/javascript">
+        window.onload = function(){
+            $("#add_form").attr('action', APP_ACTION['REGISTER']);
+            get_detail();
+        }
+        //异步提交
+        $(function () {
+            $("#add").click(function () {
+                $('#add_form').ajaxSubmit({
+                    success: function (result, status) {
+                        switch(result) {
+                            case '35':
+                                alert('用户名不能为空!');
+                                break;
+                            case '36':
+                                alert('请填写真实姓名!');
+                                break;
+                            case '37':
+                                alert('密码不能为空!');
+                                break;
+                            case '38':
+                                alert('密码不一致!');
+                                break;
+                            case '39':
+                                alert('请填写常用邮箱!');
+                                break;
+                            case '40':
+                                alert('该用户名已被注册!');
+                                break;
+                            case '41':
+                                alert('头像上传失败,请重试!');
+                                break;
+                            case '4':
+                                alert('修改失败，请重试!');
+                                break;
+                            case '5':
+                                alert('修改成功!');
+                                window.location.href = 'account.html';
+                                break;
+                            default:
+                                alert(result + '未接受的返回码');
+                                break;
+                        }
+                    }
+                });
+            });
+        });
+
+        //获取用户信息
+        function get_detail(){
+            var id = getParam('id');
+            if (id != '') { //获取信息
+                var url = APP_ACTION['REVISE_USER'] + '/' + id;
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: url,
+                    dataType: "json",
+                    jsonp: "callbackparam",
+                    jsonpCallback: "callback",
+                    success: function(result){
+                        $("#id").val(result['id']);
+                        $("#user_name").val(result['user_name']);
+                        $("#user_real_name").val(result['user_real_name']);
+                        $("#user_password").val(result['user_password']);
+                        $("#confirm_psw").val(result['confirm_psw']);
+                        $("#user_email").val(result['user_email']);
+                    },
+                    error: function(){
+                        alert('应用获取失败,请检查连接');
+                    }
+                });
+            }
+        }
+    </script>
+
+
+</head>
+
+<body class="um-vp c-gra5" ontouchstart>
+<div id="center_content"  class="up ub ub-ver">
+    <!--header开始-->
+    <div id="header" class="uh">
+        <div class="umh015"></div>
+        <div class="c-blu3 c-m2 t-wh uc-a uba us b-gra uinn6">
+            <a class="btn btn-l btn-a ub ub-ac" ontouchstart="zy_touch('btn-act1')" onclick="uexWindow.close(1,250)">
+                <div class="ulim">返回</div>
+            </a>
+            <h1 class="ut ulev0 ut-s tx-c" id="title">用户信息修改</h1>
+        </div>
+    </div>
+    <!--header结束-->
+
+    <!--content开始-->
+    <div id="content" class="ub-f1 tx-l t-bla c-gra uinn2">
+        <!--用户注册-->
+        <form id="add_form" method="post" enctype="multipart/form-data">
+            <div class="uba b-gra c-wh uc-a uinn18">
+                <div ontouchstart="zy_touch('btn-act')" class="uc-t ubb ub b-gra t-bla ub-ac umh4 lis">
+                    <div class="ut-s rpass tx-r">用&nbsp;户&nbsp;名:</div>
+                    <div class="ub-f1 tx-r t-gra umar-l">
+                        <div class="c-wh uc-n b-gra uinput uinn4">
+                            <input id="user_name" name="user_name" type="text" class="uc-n ulev-3">
+                        </div>
+                    </div>
+                </div>
+                <div ontouchstart="zy_touch('btn-act')" class="uc-t ubb ub b-gra t-bla ub-ac umh4 lis">
+                    <div class="ut-s rpass tx-r">真实姓名:</div>
+                    <div class="ub-f1 tx-r t-gra umar-l">
+                        <div class="c-wh uc-n b-gra uinput uinn4">
+                            <input id="user_real_name" name="user_real_name" type="text" class="uc-n ulev-3">
+                        </div>
+                    </div>
+                </div>
+                <div ontouchstart="zy_touch('btn-act')"  class="ub ubb b-gra t-bla ub-ac umh4 lis">
+                    <div class="ut-s rpass tx-r">密&nbsp;&nbsp;&nbsp;&nbsp;码:</div>
+                    <div class="ub-f1 tx-r t-gra umar-l">
+                        <div class="c-wh uc-n b-gra uinput uinn4">
+                            <input type="password" id="user_password" name="user_password" class="uc-n ulev-3">
+                        </div>
+                    </div>
+                </div>
+                <div ontouchstart="zy_touch('btn-act')" class="ub ubb b-gra t-bla ub-ac umh4 lis">
+                    <div class="ut-s rpass tx-r">确认密码:</div>
+                    <div class="ub-f1 tx-r t-gra umar-l">
+                        <div class="c-wh uc-n b-gra uinput uinn4">
+                            <input type="password" id="confirm_psw" name="confirm_psw" class="uc-n ulev-3">
+                        </div>
+                    </div>
+                </div>
+                <div ontouchstart="zy_touch('btn-act')"  class="ub ubb b-gra t-bla ub-ac umh4 lis">
+                    <div class="ut-s rpass tx-r">电子邮箱:</div>
+                    <div class="ub-f1 tx-r t-gra umar-l">
+                        <div class="c-wh uc-n b-gra uinput uinn4">
+                            <input id="user_email" name="user_email" type="email" class="uc-n ulev-3">
+                        </div>
+                    </div>
+                </div>
+                <div ontouchstart="zy_touch('btn-act')"  class="uc-b ub t-bla ub-ac umh4 lis">
+                    <div class="ut-s rpass tx-r">上传头像:</div>
+                    <div class="ub-f1 tx-r t-gra umar-l">
+                        <div class="c-wh uc-n b-gra uinput uinn4">
+                            <input name="userfile" type="file"><span id="userfile"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name = 'id' id = 'id' />
+            <!--
+            <div style="text-align: center">
+                <input type="button" id="add" value="提交" />
+                <input type="reset" value="重置" />
+            </div>
+            -->
+
+            <div id="add" ontouchstart="zy_touch('btn-act')" class="btn uba b-gra uinn2 c-gra c-m7 uc-a t-bla uinl">保存修改</div>
+
+        </form>
+
+    </div>
+
+
+
+</div>
+</body>
+
+<script>
+    zy_init();
+
+
+
+
+</script>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>微生活信息</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-input.css">
+    <link rel="stylesheet" href="css/ui-img.css">
+    <link rel="stylesheet" href="css/ui-list.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <link rel="stylesheet" href="css/ui-res.css">
+    <script src="js/module/angular.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+</head>
+<body data-ng-controller="newsCtrl" class="um-vp c-wh fixHeader" ontouchstart>
+<!--header开始-->
+<header id="header" class="uh">
+    <div class="umh015"></div>
+    <div class="c-blu3 c-m2 t-wh uc-a uba us b-gra uinn6">
+        <a class="btn btn-l btn-a ub ub-ac" ontouchstart="zy_touch('btn-act1')" templarlink="back" data-trans="1">
+            <div class="ulim">返回</div>
+        </a>
+        <h1 class="ut ulev0 ut-s tx-c">微生活</h1>
+    </div>
+</header>
+<div id="headerfixer"> </div>
+<script src="js/headerFixer.js"></script>
+<!--header结束-->
+<!--content开始-->
+<section id="content" class="ub-f1 tx-l t-bla c-wh">
+    <div class="uc-n ub t-bla ub-ac lis uhide uinn">
+        <div class="ub-f1 ub ub-ver">
+            <div class="ulev0 uof-x tx-c" id="newsTitle">{{newsDetail.title}}</div>
+            <div class="ub ub-ac t-gra ulev-2" style="margin-top:0.8em; padding-left:50%;">
+                <div class="umh2 umw2 ub-img5 im_clock lpicl lpic"></div>
+                <span>{{newsDetail.create_time}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding:0 .5em .5em .5em;">
+        <div class="ubll"></div>
+        <div class="b-gra1 uof" style="padding:0.5em;">
+            <p data-ng-bind-html-unsafe="newsDetail.content">  </p>
+            <p><br></p>
+        </div>
+    </div>
+
+</section>
+<!--content结束-->
+
+
+</body>
+
+<script src="js/module/directive.js"></script>
+<script>
+    zy_init();
+
+    defaultApp.controller("newsCtrl",function($scope,$http){
+        $scope.SERVER_ROOT = SERVER_ROOT;
+        $scope.newsDetail = {};
+        $http({
+            method: 'GET',
+            url: APP_ACTION['GET_WELIFE_DETAIL']+zy_parse()['id'],
+            params: null
+        }).success(function (data, status, headers, config) {
+                    $scope.newsDetail = data;
+                }) .error(function (data, status, headers, config) {
+                    uexWindow.toast(0,5,'信息获取失败！',3000);
+                });
+    })
+
+    window.uexOnload = function(type){
+
+        angular.bootstrap(document,['defaultApp']);
+        if (!type) {
+            //
+        }
+        window.onorientationchange=window.onresize=function()
+        {
+            zy_resize("content",0,$$("header").offsetHeight);
+        }
+    }
+
+
+</script>
+</html>
+
+

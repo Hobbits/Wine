@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>文章详情</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+</head>
+<body data-ng-controller="newsCtrl" class="um-vp c-wh fixHeader" ontouchstart>
+
+    <!--header开始-->
+    <header id="header" class="headerHeight">
+        <div class="headerInner">
+            <i class="lefticon" templarlink="back" data-trans="1"></i>
+            <h1 class="mid"> </h1>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+
+     <!--content开始-->
+    <section id="content" class="ub-f1">
+        <div class="uc-n ub ub-ac uinn">
+            <div class="ub-f1 ub ub-ver">
+                <div class="ulev0 uof-x tx-c" id="newsTitle" ng-cloak>{{soulArticleDetail.title}}</div>
+                <div class="ub ub-ac ulev-2 tx-r" style="margin-top:0.8em; padding-left:70%;">
+                    <span ng-cloak>{{ soulArticleDetail.createtime }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding:0 .5em .5em .5em;">
+            <div class="ubll"></div>
+            <div class="uof" style="padding:0.5em;">
+                <p><img data-ng-src="{{IMAGE_ROOT + soulArticleDetail.picture}}" style="max-width:100%; max-height:100%;"></p>
+                <p data-ng-bind-html="soulArticleDetail.content"></p>
+                <p><br></p>
+            </div>
+        </div>
+    </section>
+    <!--content结束-->
+</body>
+
+<script>
+zy_init();
+defaultApp.controller("newsCtrl",function($scope,$http){
+    $scope.IMAGE_ROOT = IMAGE_ROOT;
+    $scope.soulArticleDetail = {};
+    $http({
+        method: 'GET',
+        url: APP_ACTION['GET_ARTICLE_DETAIL'] + zy_parse()['id'],
+        params: null
+    }).success(function (data) {
+        console.log(data);
+        if(data.status == "ok") {
+            $scope.soulArticleDetail = data.result[0];
+        }
+    }).error(function () {
+        uexWindow.toast(0,5,'获取文章详情失败！',3000);
+    });
+})
+
+window.uexOnload = function(type){
+    angular.bootstrap(document,['defaultApp']);
+    if (!type) {
+        //
+    }
+    window.onorientationchange=window.onresize=function()
+    {
+        zy_resize("content",0,$$("header").offsetHeight);
+    }
+}
+</script>
+</html>
+
+

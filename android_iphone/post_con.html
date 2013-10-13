@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>讨论</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/base-font/icon-base.css"/>
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+    <style type="text/css">
+        .disheader {
+            padding: 0.5em 0.5em 1em 0.5em;
+            border-bottom:2px groove #D5D5D5;
+            position:relative;
+        }
+        .userName{color:#1C85DB; }
+        .timebottom {vertical-align: bottom;}
+        .replyName {font-weight: bold; font-size:0.95em; color:#1C85DB;;}
+        .posttime {font-weight: normal; margin-top: 0.3em;}
+        .breakword {word-wrap: break-word; break-word: break-all;}
+    </style>
+</head>
+<body data-ng-controller="discuss_conCtrl" class="um-vp c-wh" ontouchstart>
+     <!--content开始-->
+    <section id="content" class="ub-f1">
+       <div class="disheader">
+           <div class="ub umh6">
+                <div class="umar-r">
+                    <img class="inforpic2 ulpic" ng-src="{{IMAGE_ROOT + postDetail.user_head}}">
+                </div>
+                <div class="ub-f1 ub ub-ver">
+                    <h3 class="ut-s ulev0 timebottom">
+                        <span class="userName" ng-cloak="">{{ postDetail.user_name }}</span>
+                        <span class="ulev-2 t-gra2 ufr umar-r2 posttime" ng-cloak>{{ postDetail.create_time }}</span>
+                    </h3>
+                    <div class="ub-f1 umar-t ulh uof breakword " ng-cloak>{{ postDetail.subject }}</div>
+                </div>
+            </div>
+            <div class="umar-t ulev-3" ng-cloak>
+                {{ postDetail.message }}
+            </div>
+        </div>
+
+        <ul>
+            <li ng-repeat="comment in comments">
+                <div class="ub uinn" >
+                    <div class="umw7 ulpic2">
+                        <img ng-src="{{ IMAGE_ROOT+comment.user_head }}" class="inforpic4">
+                    </div>
+                    <div class="ub-f1 ub ub-ver">
+                        <h4 class="info-discuss">
+                            <span class="replyName" ng-cloak>{{ comment.user_name }}</span>
+                            <span class="ulev-2 t-gra2 ufr umar-r2" ng-cloak>{{ comment.createtime }}</span>
+                        </h4>
+                        <div class="ulev-3 breakword" ng-cloak>
+                            {{ comment.content }}
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <!--content结束-->
+</body>
+
+<script>
+zy_init();
+var getPost;
+defaultApp.controller("discuss_conCtrl",function($scope,$http){
+    $scope.IMAGE_ROOT = IMAGE_ROOT;
+    $scope.postDetail = localStorageServ.get('postDetail');
+    var postId = $scope.postDetail.pid;
+    getPost = function(){
+        $http({
+            method: 'GET',
+            url: APP_ACTION['GET_POST_COMMENT']+postId
+        }).success(function (data) {
+                    if(data.status == 'ok'){
+                        $scope.comments = data.result;
+                    } else {
+                        uexWindow.toast(0, 5, data.result, 3000);
+                    }
+                })
+                .error(function () {
+                    uexWindow.toast(0, 5, '信息获取失败！', 3000);
+
+                });
+    }
+})
+
+window.uexOnload = function(type){
+    angular.bootstrap(document,['defaultApp']);
+    getPost();
+    if(!type){
+        uexWindow.setBounce("1");
+        uexWindow.showBounceView("0","#FFF","0");
+        uexWindow.showBounceView("1","#FFF","0");
+    }
+}
+
+</script>
+</html>
+
+

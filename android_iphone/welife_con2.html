@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>微生活</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+
+    <script src="js/module/1.2.0/angular.min.js"></script>
+
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+
+    <style>
+        #videoList .listitem{
+            display: block;
+            padding: 0.5rem 0.3rem;
+            border-bottom: 2px solid #B5B5B5;
+            min-height: 3rem;
+            box-sizing: border-box;
+            position: relative;
+            -webkit-tap-highlight-color: rgba(255, 252, 186, 0.47);
+        }
+        .listitem>div{
+            font-size: 1em;
+            height: 4.5rem;
+            padding: 0 0.5rem;
+            overflow: hidden;
+        }
+        .listitem .thumb{
+            background-size: auto 100% !important;
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            width: 6rem;
+            float: left;
+        }
+        .listitem .info{
+            margin: 0 6rem 0 7rem;
+            position: absolute;
+            word-break: break-all;
+        }
+        .listitem .time{
+            width: 5rem;
+            float: right;
+            text-align: right;
+        }
+        .listitem .time time{
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.3em;
+            line-height: 4.5rem;
+            text-align: right;
+        }
+    </style>
+
+</head>
+<body data-ng-controller="weilife2Ctrl" class="um-vp">
+<!--content开始-->
+<section class="">
+    <ul id="videoList" ng-if="vlist">
+        <li ng-click="goVideoDetail(v)" class="listitem clearfix" ng-repeat="v in vlist">
+           <div class="thumb" ng-style="{ background: 'url({{imgRoot+v.video_image}})' }">
+
+           </div>
+            <div class="info flexbox-center" ng-bind="v.video_name">
+
+            </div>
+            <div class="time">
+                <time>{{v.video_length[0]}}:{{v.video_length[1]}}</time>
+            </div>
+        </li>
+    </ul>
+</section>
+<!--content结束-->
+</body>
+
+
+<script>
+    zy_init();
+
+    defaultApp.controller("weilife2Ctrl",function($scope,$http){
+        $scope.imgRoot=IMAGE_ROOT;
+        $http({
+            method: 'GET',
+            url: APP_ACTION['GET_VIDEOLIST']+'1'+'/'+'99999',
+            params: null
+        }).success(function (data, status, headers, config) {
+                    if(data.result && data.result.list){
+                         $scope.vlist=data.result.list;
+                    }else{
+                        uexWindow.toast(0, 5, '貌似没有视频', 3000);
+                    }
+                })
+                .error(function (data, status, headers, config) {
+                    uexWindow.toast(0, 5, '信息获取失败！', 3000);
+                });
+
+
+        $scope.goVideoDetail=function(detail){
+            localStorageServ.add('videoDetail',detail);
+            window.uexWindow.open('videoDetail.html','0','videoDetail.html','0','','','0');
+        }
+
+    });
+
+    window.uexOnload = function(type){
+        angular.bootstrap(document,['defaultApp']);
+
+    }
+</script>
+</html>
+

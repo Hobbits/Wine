@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html ng-app="defaultApp" class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>JM商店</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+
+
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+
+    <link rel="stylesheet" href="css/font/css/fontello.css">
+</head>
+<body class="um-vp up fixHeader">
+<div class="up ub ub-ver">
+    <!--header开始-->
+    <header id="header" class="headerHeight">
+        <div class="headerInner">
+            <i class="lefticon" templarlink="back" data-trans="1"></i>
+
+            <h1 class="mid">JM商店</h1>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+    <!--content开始-->
+    <section id="content" class="htmlWrap marginFooterHeight">
+
+
+
+
+    </section>
+    <footer class="footerNav footerHeight">
+        <ul class="footerInner">
+            <input class="uhide" type="radio" name="menus" id="menu1">
+            <li onclick="menuSelected(1);"
+                class="flexbox-center footerTab"><h3>吃+</h3>
+            </li>
+
+            <input class="uhide" type="radio" name="menus" id="menu2">
+            <li onclick="menuSelected(2);"
+                class="flexbox-center footerTab"><h3>衣+</h3>
+            </li>
+
+            <input class="uhide" type="radio" name="menus" id="menu3">
+            <li onclick="menuSelected(3);"
+                class="flexbox-center footerTab"><h3>文+</h3>
+            </li>
+
+            <input class="uhide" type="radio" name="menus" id="menu4">
+            <li onclick="menuSelected(4);"
+                class="flexbox-center footerTab"><h3>其他</h3>
+            </li>
+        </ul>
+    </footer>
+    <!--content结束-->
+
+</div>
+</body>
+
+<script>
+    zy_init();
+
+
+    function radioSelect(id){
+        var ret = 0;
+        var e = $$(id);
+        if(e && !e.checked){
+            e.checked = true;
+            ret = 1;
+        }
+        return ret;
+    }
+
+
+    function menuSelected(i){
+        var filename = "";
+        switch(i){
+            case 1 :
+                filename = "shop_detail.html?t=EAT";
+                break;
+            case 2 :
+                filename = "shop_detail.html?t=CLOTHES";
+                break;
+            case 3 :
+                filename = "shop_detail.html?t=ARTICLE";
+                break;
+            case 4 :
+                filename = "shop_detail.html?t=OTHER";
+                break;
+        }
+        zy_con("content", filename, 0, $$("header").offsetHeight);
+        radioSelect('menu'+i);
+    }
+
+
+
+    window.uexOnload = function(type){
+        if (!type) {
+            menuSelected(1);
+            // uexWindow.openPopover("information_con1", "0", "information_con1.html", "", 0, $$('header').offsetHeight, "", "", "","");
+        }
+        window.onorientationchange=window.onresize=function(){
+            zy_resize("content",0,$$("header").offsetHeight);
+        }
+    }
+
+
+
+
+</script>
+</html>
+

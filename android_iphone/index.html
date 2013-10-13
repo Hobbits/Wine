@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>首页</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <link rel="stylesheet" href="css/base-font/icon-base.css"/>
+
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/zy_slide.js"></script>
+    <script src="js/route.js"></script>
+    <style>
+        #startBox {z-index:1000;}
+        #startImg {
+            /*此处地址要修改！SERVER_ROOT+images/image.php */
+            background:url('http://putaoshu.sqapp.cn/index.php/Article/get_start_pic') no-repeat center center;
+
+            /*background:url('http://192.168.1.2/wine2/code/index.php/Article/get_start_pic') no-repeat center center;*/
+            background-size: cover; -webkit-background-size: cover;
+        }
+        html,body {
+            top:0;bottom: 0;left: 0;right: 0;
+            background: url("images/bg.jpg") 50% 50% no-repeat #000000;
+            background-attachment:fixed;
+            -webkit-background-size: cover;
+            background-size: cover;
+           position: absolute;
+            overflow: hidden;
+        }
+        body{position: relative}
+        #movebg{
+            background-position-x:50%;
+
+            /*-moz-transition: background-position 0.3s;*/
+            /*-webkit-transition: background-position 0.3s;*/
+            /*transition: background-position 0.3s;*/
+        }
+        @media (orientation:landscape) {
+            #movebg{
+                background-position-x:0 !important;
+            }
+        }
+
+        .my_navbar01 {position:absolute; top:10%; right:7%; list-style:none; z-index:999; }
+
+        .my_navbar {position:absolute; top:60%; right:7%; list-style:none; z-index:999; }
+        .my_navbar li {margin-top:0.5em;}
+        .my_navbar01 img , .my_navbar img {
+            width:2.8em;
+            height:2.8em;
+        }
+        @keyframes fade {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        @-webkit-keyframes fade{
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        #tip {
+            position: absolute;
+            bottom: 32px;
+            width: 100%;
+            text-align: center;
+            color: #FFF;
+            font-weight: bold;
+            animation-name: fade;
+            animation-duration: 4s;
+            animation-timing-function: ease-in;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+
+            -webkit-animation-name: fade;
+            -webkit-animation-duration: 4s;
+            -webkit-animation-timing-function: ease-in;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-direction: alternate;
+        }
+
+            /* .login {position:absolute; top:16%; left:80%; }            */
+        #slider{
+            height: 100%;
+            width:100%;
+            position: absolute;
+        }
+
+        #block1,#block2 {
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            padding: 10% 0 5% 10%;
+        }
+        .rows{
+            position: relative;
+            height: 23%;
+            /*padding-left: 10%;*/
+            margin-bottom: 0.4em;
+        }
+        .naver{
+            height: 98%; width: 34%;
+            margin:0 0% 0 0;
+            display: inline-block;
+        }
+        .naver span {
+            width: 100%;
+            height: 100%;
+            font-size: 1em;
+            color: #FFF;
+            font-weight: 600;
+            white-space:nowrap;
+            display: block;
+            text-align: center;
+            line-height: 4em;
+        }
+        .naver [class^="icon-"]:before,.naver [class*=" icon-"]:before {
+            font-size: 2.5em;
+            display: block;
+            width: 100%;
+            text-align: center;
+            line-height: 25%;
+            margin-right: 0em;
+            margin-left: 0em;
+            padding-top: 30%;
+        }
+
+
+        /* 窗口宽度在480px以下 */
+        @media screen and (max-width:300px){
+             .naver span{font-size:0.8em}
+        }
+        @media screen  and (min-width: 301px) and (max-width:480px){
+             .naver span{font-size:1em}
+        }
+        /* 窗口宽度在480px以上、768px以下 */
+        @media screen and (min-width: 481px) and (max-width: 767px){
+             .naver span{font-size:1.5em}
+        }
+        /* 窗口宽度在768pxpx以上 */
+        @media (min-width: 768px) {
+             .naver span{font-size:1.8em}
+        }
+
+        #content{
+            /*position: relative;*/
+            /*top: 0;*/
+            /*left: 0;*/
+            /*right: 0;*/
+            /*bottom: 0;*/
+        }
+    </style>
+
+</head>
+<body class="um-vp c-wh" id="movebg" data-ng-controller="indexCtrl">
+<div class="up ub" id="startBox">
+    <div id="start" class="ub-con ub"><!--滑块-->
+        <div class="ub-fh" id="startImg">
+            <div id="tip">上滑可进入首页</div>
+        </div>
+    </div>
+</div>
+<div id="page_0" class="up ub ub-ver" tabindex="0">
+    <!--content开始-->
+    <div id="content" class="ub-f1"><!--容器-->
+        <div id="slider" class="ub" ><!--滑块-->
+            <div id="block1" class="ub-fh"><!--分页1-->
+                 <div class="rows">
+                     <a class="naver" style="background-color:#2E8BEF;"
+                        templarlink="album.html" data-search="t=tree" data-trans="2">
+                           <span class="icon-vine">集美</span>
+                     </a>
+                     <a class="naver" templarlink="club_list.html" data-trans="2"
+                        style="background-color:#3FB23F;" >
+                         <span class="icon-theme-club">主题会所</span>
+                     </a>
+                 </div>
+                <div class="rows">
+                    <a class="naver" style="background-color:#F2705F;"
+                       templarlink="welife.html" data-trans="2">
+                        <span class="icon-micro-life">微生活</span>
+                    </a>
+                    <a class="naver" style="background-color:#E25099;"
+                       templarlink="information.html" data-trans="2">
+                        <span class="icon-message">信息</span>
+                    </a>
+                </div>
+
+                <div class="rows">
+                    <a class="naver" style="background-color:#613DBC;"
+                       templarlink="shop.html" data-trans="2">
+                        <span class="icon-jm-store">JM商店</span>
+                    </a>
+                    <a class="naver" style="background-color:#DD4F17;"
+                       templarlink="multiService.html" data-trans="2">
+                        <span class="icon-multi-service">多元服务</span>
+                    </a>
+                </div>
+
+                <div class="rows">
+                    <a class="naver" style="background-color:#00A400;" >
+                        <span class="icon-my-club">我的会所</span>
+                    </a>
+                    <a class="naver" style="background-color:#24BECE;"
+                       templarlink="soulGarden.html" data-trans="2">
+                        <span class="icon-mind-garden">心灵花园</span>
+                    </a>
+                </div>
+            </div>
+
+            <div id="block2" class="ub-fh"><!--分页2-->
+                <div class="rows">
+                    <a class="naver" style="background-color:#2E8BEF;"
+                       templarlink="recommend.html" data-trans="2">
+                        <span class="icon-jian">荐<sup>+</sup></span>
+                    </a>
+                    <a class="naver" style="background-color:#3FB23F;"
+                       templarlink="album.html" data-search="t=eat" data-trans="2">
+                        <span class="icon-chi">吃<sup>+</sup></span>
+                    </a>
+                </div>
+                <div class="rows">
+                    <a class="naver" style="background-color:#F2705F;"
+                       templarlink="album.html" data-search="t=wear" data-trans="2">
+                        <span class="icon-yi">衣<sup>+</sup></span>
+                    </a>
+                    <a class="naver" style="background-color:#E25099;"
+                       templarlink="album.html" data-search="t=cult" data-trans="2">
+                        <span class="icon-wen">文<sup>+</sup></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <ul class="my_navbar01">
+            <li>
+                <a ng-click="logon()" data-trans="2">
+                    <img ng-src="{{headurl}}" />
+                </a>
+            </li>
+        </ul>
+        <ul class="my_navbar">
+            <li>
+                <a templarlink="account.html" data-trans="11" data-needlogin="true">
+                    <img src="images/02.png" />
+                </a>
+            </li>
+
+            <li>
+                <a onclick="uexWidgetOne.exit()" data-trans="2" data-needlogin="true">
+                    <img src="images/03.png" />
+                </a>
+            </li>
+            <!--<li class="news"><a href="#"><img src="images/04.png" /></a><span><img src="images/news.png"/></span></li>-->
+        </ul>
+
+        <!--<div class="login"><a href="#"><img src="images/c.png" /></a></div>-->
+    </div>
+    <!--content结束-->
+</div>
+</body>
+<script>
+    zy_init();
+    //        document.addEventListener("touchmove",function(e){
+    //            var x=e.changedTouches[0].pageX;
+    //        })
+
+
+    defaultApp.controller("indexCtrl",function($scope){
+        var getuInfo=function(){
+            return localStorageServ.get('userInfo');
+        }
+
+
+        var getUhead=function(o){
+            var userInfo=o || getuInfo();
+            var url='images/01.png';
+                if(userInfo && userInfo.user_head){
+                    $scope.headurl =IMAGE_ROOT+userInfo.user_head;
+                }else{
+                    $scope.headurl=url;
+                };
+        };
+
+        uexWindow.onStateChange = function(state){
+            if(state == 0){
+                $scope.$apply(function(){getUhead();});
+            }
+        };
+
+        getUhead();
+
+
+        $scope.logon=function(){
+            if(!getuInfo()){
+                window.uexWindow.open('account.html','0','account.html',11,'','','4');
+            }
+        }
+
+    })
+
+    window.uexOnload = function(type){
+                var blockWidth=document.body.clientWidth;
+//        $$('block1').style.width=blockWidth+'px';
+//        $$('block2').style.width=blockWidth+'px';
+//        $$('slider').style.width=blockWidth+'px';
+
+
+        angular.bootstrap(document,['defaultApp']);
+        $$('content').addEventListener('touchmove',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+        },false);
+        document.body.addEventListener('touchmove',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+
+        if(!type) {
+            var bgEle=document.getElementById("movebg");
+
+            var k=blockWidth/20;
+            $$("slider").slide = new zySlide("slider","H",function(){}, false, function(e) {
+
+            },function(cor){
+                /*第六个参数，获取移动坐标*/
+                if(cor){
+                    var bgmove=(cor/k)*(-1)+50;
+                    bgEle.style.backgroundPosition=bgmove+"%"+" center";
+                }
+            });
+
+
+            /*向上拉起*/
+            var pushUp={
+                minMoveHeight:document.body.clientHeight*0.1,
+                starter:$$("start"),
+                cor:0,
+                transendAct:function(){
+                    if(pushUp.cor>=pushUp.minMoveHeight){
+                        pushUp.starter.slide.destroy();
+                        setTimeout(function(){
+                            var startBox = $$('startBox');
+                            startBox.parentNode.removeChild(startBox);
+                        },500)
+
+                    }
+                }
+            }
+
+            pushUp.starter.slide = new zySlide("start","V",function(){
+
+            }, true, function(e) {
+
+            },function(cor){
+                pushUp.cor=Math.abs(cor);
+                if(pushUp.cor>=pushUp.minMoveHeight){
+                    pushUp.starter.style.webkitTransitionDuration = '500ms';
+                    pushUp.starter.style.webkitTransform = getTranslateY(document.body.clientHeight*(-1));
+                    pushUp.transendAct();
+
+                }
+            });
+
+            /*向上拉起结束*/
+
+        };
+
+
+        uexWidgetOne.cbGetPlatform = function (opId,dataType,data){
+            window.isAndroid=data;
+            localStorageServ.add("platform", data); //data为0表示IOS，为1是表示andiroid
+        }
+        setTimeout(function(){uexWidgetOne.getPlatform();},1000);//获取平台信息
+
+    }
+
+
+</script>
+
+</html>

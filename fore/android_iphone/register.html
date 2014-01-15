@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>用户注册</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-input.css">
+    <link rel="stylesheet" href="css/ui-img.css">
+    <link rel="stylesheet" href="css/ui-list.css">
+
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <script src="js/zy_control.js"></script>
+    <script src="js/module/jquery.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+    <script src="js/jquery.form.js"></script>
+    <script src="js/route.js"></script>
+    <link rel="stylesheet" href="css/font/css/fontello.css">
+    <style>
+        .goReg{
+
+            display: block;
+            border: none;background: none;box-shadow: none;
+            width: 75%;
+            height: 5em;
+            margin: 1.5em auto 0 auto;
+            background-color: #198419;
+            color: #ffffff;font-weight: bold;font-size: 1.2em;
+        }
+    </style>
+
+
+</head>
+
+<body class="um-vp fixHeader" ontouchstart>
+    <div id="center_content"  class="up ub ub-ver">
+
+        <!--header开始-->
+        <header id="header" class="headerHeight">
+            <div class="headerInner">
+                <i class="lefticon" ontouchstart="zy_touch('btn-act1')" onclick="uexWindow.close('-1','250')"></i>
+                <!--<i id="add" class="righticon"><span class="icon-ok"></span></i>-->
+                <h1 class="mid">用户注册</h1>
+            </div>
+        </header>
+        <div class="headerHeight"></div>
+        <!--header结束-->
+
+
+
+
+
+
+        
+        <!--content开始-->
+        <div id="content" class="ub-f1 tx-l t-bla c-gra uinn2">
+
+            <button class="goReg" onclick="goReg(1)">注册普通会员</button>
+            <button class="goReg" onclick="goReg(2)">注册会所负责人</button>
+
+        </div>
+
+
+
+    </div>
+</body>
+
+<script>
+zy_init();
+
+    var goReg=function(index){
+        var str='register'+index;
+        window.uexWindow.open(str,'0',str+'.html',2,'','','0');
+    }
+
+</script>
+</html>

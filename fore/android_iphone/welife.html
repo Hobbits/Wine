@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html ng-app="defaultApp" class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>空间社区</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+
+
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+
+    <link rel="stylesheet" href="css/font/css/fontello.css">
+</head>
+<body class="um-vp up fixHeader">
+    <div class="up ub ub-ver">
+    <!--header开始-->
+    <header id="header" class="headerHeight">
+        <div class="headerInner">
+            <i class="lefticon" templarlink="back" data-trans="1"></i>
+            <i id="add" onmousedown="welifeadd()" class="righticon"><span class="icon-pencil"></span></i>
+
+            <h1 class="mid">空间社区</h1>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+    <!--content开始-->
+    <section id="content" class="htmlWrap marginFooterHeight">
+
+
+
+
+    </section>
+    <footer class="footerNav footerHeight">
+         <ul class="footerInner">
+             <input class="uhide" type="radio" name="menus" id="menu1">
+             <li onclick="menuSelected(1);"
+                 class="flexbox-center footerTab"><h3>分享</h3></li>
+             <input class="uhide" type="radio" name="menus" id="menu2">
+             <li onclick="menuSelected(2);"
+                 class="flexbox-center footerTab"><h3>视频</h3></li>
+         </ul>
+    </footer>
+    <!--content结束-->
+
+    </div>
+</body>
+
+<script>
+    zy_init();
+        var welifeadd = function() {
+            if(isClubPerson()) {
+                uexWindow.open('welifeadd.html','0','welifeadd.html',11,'','','4');
+            } else {
+                uexWindow.alert("",'仅会所负责人才能分享!',"确定");
+            }
+        }
+
+        function radioSelect(id){
+            var ret = 0;
+            var e = $$(id);
+            if(e && !e.checked){
+                e.checked = true;
+                ret = 1;
+            }
+            return ret;
+        }
+
+
+        function menuSelected(i){
+            var filename = "";
+            switch(i){
+                case 1 :
+                    filename = "welife_con1.html";
+                    $$('add').classList.remove('uhide');
+                    break;
+                case 2 :
+                    filename = "welife_con2.html";
+                    $$('add').classList.add('uhide');
+                    break;
+            }
+            zy_con("content", filename, 0, $$("header").offsetHeight);
+            radioSelect('menu'+i);
+        }
+
+
+
+        window.uexOnload = function(type){
+            if (!type) {
+                menuSelected(1);
+                // uexWindow.openPopover("information_con1", "0", "information_con1.html", "", 0, $$('header').offsetHeight, "", "", "","");
+            }
+            window.onorientationchange=window.onresize=function(){
+                zy_resize("content",0,$$("header").offsetHeight);
+            }
+        }
+
+
+
+
+</script>
+</html>
+

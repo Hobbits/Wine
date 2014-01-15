@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <meta charset="utf-8">
+    <title>发帖</title>
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-input.css">
+    <link rel="stylesheet" href="css/ui-img.css">
+
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+
+
+    <script src="js/zy_control.js"></script>
+    <script src="js/module/jquery.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+
+    <link rel="stylesheet" href="css/font/css/fontello.css">
+    <style>
+        #imgid{
+            max-width: 100%;
+            max-height: 7em;
+        }
+        #choosePic{
+            display: none;
+            color: black;
+        }
+        #add{
+            color: white;
+        }
+        .tx_gray{
+            color: #a9a9a9 !important;
+        }
+        textarea {resize: none;}
+    </style>
+</head>
+
+<body class="um-vp fixHeader">
+
+    <!--header开始-->
+    <header id="header" class="headerHeight">
+        <div class="headerInner">
+            <i class="lefticon" ontouchstart="zy_touch('btn-act1')" onclick="uexWindow.close('-1','250')"></i>
+            <i id="add" class="righticon"><span class="icon-ok"></span></i>
+            <h1 class="mid">发帖</h1>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+
+    <!--content开始-->
+    <section id="content">
+
+        <form id="post_form" method="post">
+            <div class="c-wh uc-a uinn18">
+                <div ontouchstart="zy_touch('btn-act')" class="uc-t ubb ub b-gra t-bla ub-ac umh4 lis">
+
+                    <div class="ub-f1 tx-r t-gra umar-l">
+                        <div class="c-wh uc-n b-gra uinput uinn4">
+                            <input id="subject" name="subject" placeholder="请输入标题" type="text" maxlength="50" class="uc-n ulev-3">
+                        </div>
+                    </div>
+                </div>
+                <div class="uc-t ubb ub b-gra t-bla ub-ac umh4 lis">
+                    <div class="ub-f1 tx-r t-gra umar-l">
+                        <div class="c-wh uc-n b-gra uinput uinn4">
+                            <textarea rows="10" placeholder="请输入内容" id="message" name="message" maxlength="300"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <input id="trueSubmit" type="submit" class="uhide">
+            </div>
+        </form>
+
+    </section>
+</body>
+<script>
+    zy_init();
+    var flag=false;
+    var addBtn=$('#add');
+    addBtn.click(function(){
+        $('#trueSubmit').click();
+    });
+
+    $('#post_form').on('submit',function(e){
+        e.preventDefault();
+        if(flag){return}
+        flag=true; addBtn.addClass('tx_gray');
+        $.ajax({
+            url: APP_ACTION.EDIT_POST,
+            data: $(e.target).serializeArray(),
+            method:'POST',
+            dataType:'json',
+            statusCode:{401:function(){
+                uexWindow.toast(0, 5, '需要登录！', 3000);
+                setTimeout(function(){
+                    window.uexWindow.open('account','0','account.html',11,'','','4');
+                },1000);
+            }}
+        }).done(function(data) {
+                    console.log(data);
+                   if(data){
+                       if(data.status=='ok'){
+                           uexWindow.toast(0, 5, '提交成功！', 1000);
+                           setTimeout(function(){
+                               uexWindow.close(12,250);
+                           },1000);
+                       }else{
+                           uexWindow.toast(0, 5, data.result, 3000);
+                           flag=false;addBtn.removeClass('tx_gray');
+                       }
+                   }
+                })
+                .fail(function(data,textStatus) {
+                    flag=false;addBtn.removeClass('tx_gray');
+                })
+                .always(function() {  });
+
+    });
+
+    window.uexOnload = function(type){
+        if (!type) {
+            //
+        }
+        window.onorientationchange=window.onresize=function() {
+            zy_resize("content",0,$$("header").offsetHeight);
+        }
+    }
+
+</script>
+</html>

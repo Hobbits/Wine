@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>文章详情</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/font/css/fontello.css"/>
+
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+    <style>
+        #content {padding-bottom: 3.2em;}
+        .tipWrap {display: -webkit-box; display: box; margin-top:0.8em; font-size: 0.8em;}
+        #footer {position:fixed; left:0; right:0; bottom:1px; opacity:.8; height:2em; text-align:center; line-height: 2em; padding: 0.2em 0.1em; background: #666;}
+        #footer .art-btn {font-size:2em; color:#FFF;}
+        .tp-click .art-btn {color:#038CDD !important;}
+        #articleContent {padding:0 .5em .5em .5em;}
+        .hasSupport .art-btn {color:#038CDD !important;}
+    </style>
+</head>
+<body data-ng-controller="newsCtrl" class="um-vp c-wh fixHeader" ontouchstart>
+
+    <!--header开始-->
+    <header id="header" class="headerHeight">
+        <div class="headerInner">
+            <i class="lefticon" templarlink="back" data-trans="1"></i>
+            <h1 class="mid">文章详情</h1>
+            <i ng-click="refresh()" class="righticon"><span class="icon-spin3"></span></i>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+
+     <!--content开始-->
+    <section id="content" class="ub-f1">
+        <div class="uc-n ub ub-ac uinn">
+            <div class="ub-f1 ub ub-ver">
+                <div class="ulev0 uof-x tx-c" id="newsTitle" ng-cloak>{{articleDetail.title}}</div>
+                <div class="ub ulev-1" style="margin-top:0.8em; padding:0 1%; ">
+                    <div class="icon-comment" style="margin-right:1em;" ng-cloak>{{articleDetail.review_number}}</div>
+                    <div class="icon-thumbs-up" ng-cloak>{{articleDetail.praise_number}}</div>
+                    <div ng-cloak class="icon-clock" style="box-flex:1; -webkit-box-flex:1; text-align: right;">{{ articleDetail.createtime }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="articleContent" ng-if="!toggleContent">
+            <div class="ubll"></div>
+            <div class="uof" style="padding:0.5em;">
+                <p><img id="articleImg" data-ng-src="{{IMAGE_ROOT + articleDetail.picture}}"></p>
+                <p data-ng-bind-html="articleDetail.content"></p>
+                <p><br></p>
+            </div>
+        </div>
+
+        <div class="comment" ng-click="showComment()" ng-if="!toggleContent" ontouchstart="zy_touch('tp-click')">
+            <img src="images/plbg.png" class="recbg" />
+            <div class="t-wh ulev0 rectxt replynum" ng-cloak>{{articleDetail.review_number}}条评论→</div>
+        </div>
+
+        <div class="comment" ng-click="showArticle()" ng-if="toggleContent" ontouchstart="zy_touch('tp-click')" ng-cloak>
+            <img src="images/plbg.png" class="recbg" />
+            <div class="t-wh ulev0 rectxt replynum" ng-cloak>←{{articleDetail.review_number}}条评论</div>
+        </div>
+
+        <ul id="commentContent" class="commentContent" ng-if="toggleContent" ng-cloak>
+            <li ng-repeat="conmentItem in conmentItems">
+                <div class="ub uinn" >
+                    <div class="umw7 ulpic2">
+                        <img ng-src="{{IMAGE_ROOT+conmentItem.user_head}}" class="inforpic4">
+                    </div>
+                    <div class="ub-f1 ub ub-ver">
+                        <h4 class="info-discuss">
+                            <span class="replyName">{{conmentItem.user_name}}</span>
+                            <span class="ulev-2 t-gra2 ufr umar-r2">{{conmentItem.create_time}}</span>
+                        </h4>
+                        <div class="ulev-3 breakword">{{conmentItem.review_content}}</div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <!--content结束-->
+
+    <footer id="footer" class="ub tab2 uba us b-gra uc-a">
+        <div ontouchstart="zy_touch('tp-click')" ng-click="reply()" class="ub-f1 ub ub-ver">
+            <div class="ub-f1"><span class="icon-comment art-btn"></span></div>
+        </div>
+        <div ontouchstart="zy_touch('tp-click')" ng-click="support()" ng-class="{hasSupport: hasSupport}" class="support ub-f1 ub ub-ver">
+            <div class="ub-f1"><span class="icon-thumbs-up art-btn"></span></div>
+        </div>
+        <div ontouchstart="zy_touch('tp-click')" ng-click="openShare()" class="ub-f1 ub ub-ver">
+            <div class="ub-f1"><span class="icon-share art-btn"></span></div>
+        </div>
+    </footer>
+
+</body>
+
+<script>
+zy_init();
+defaultApp.controller("newsCtrl",function($scope,$http){
+
+    $scope.IMAGE_ROOT = IMAGE_ROOT;
+    var articleId = localStorageServ.get("articleId");
+
+
+    //获取文章内容
+    var getArticleDetail = function() {
+        $scope.articleDetail = {};
+        $http({
+            method: 'GET',
+            url: APP_ACTION.GET_ARTICLE_DETAIL + articleId,
+            params: null
+        }).success(function (data) {
+                    console.log(data);
+                    if(data.status == "ok") {
+                        $scope.articleDetail = data.result[0];
+                    }
+                }).error(function () {
+                    uexWindow.toast(0,5,'获取文章详情失败！',3000);
+                });
+    };
+    getArticleDetail();
+
+
+    //查看评论
+    $scope.showComment = function(){
+        $scope.toggleContent = !$scope.toggleContent;
+
+        $scope.conmentItems=[];
+        var pageNum=1;
+        var loadpage=function(pnum){
+            var limit=10;
+            $http({
+                method: 'GET',
+                url: APP_ACTION.GET_REVIEW_LIST + articleId + "/1/"+ pnum+'/'+limit,
+                params: null
+            }).success(function (data) {
+                        console.log(data);
+                        if(data.status=='ok' && angular.isArray(data.result)){
+                            $scope.conmentItems=$scope.conmentItems.concat(data.result);
+                            if(data.result.length>0){
+                                if(data.result.length>=limit){
+                                    pageNum=pnum;
+                                }else{
+                                    pageNum++;
+                                }
+                            }
+                        }else{
+                            uexWindow.toast(0, 5, data.result, 3000);
+                        }
+                    })
+                    .error(function (data, status, headers, config) {
+                        uexWindow.toast(0,5,'获取评论列表失败！',3000);
+                    });
+        };
+        loadpage(pageNum);
+
+        /**
+         * 设置弹动属性
+         */
+        function set_bounce(){
+            uexWindow.setBounce("1");
+            setUpstyle("加载更多");
+            uexWindow.showBounceView("1","rgba(142,201,96,30)","0");
+            uexWindow.notifyBounceEvent('1','1');
+            uexWindow.onBounceStateChange = function(type,state){
+
+                if(type == '1' && state == "2"){
+                    loadData();
+                }
+            }
+        };
+        set_bounce();
+        function loadData(){
+            uexWindow.toast(1,5,"loading....",2000);
+            loadpage(pageNum+1);
+            //2秒后，恢复弹动初始状态
+            setTimeout(function(){uexWindow.resetBounceView('1');},2000);
+        }
+        function setUpstyle(ltext){
+            var json_p = '{"imagePath":"res://refresh_upicon.png","textColor":"#000","levelText":"'+ltext+'","pullToReloadText":"加载更多","releaseToReloadText":"松开即可刷新","loadingText":"正在刷新中..."}';
+            uexWindow.setBounceParams('1',json_p);
+        }
+    }
+    $scope.showArticle = function() {
+        $scope.toggleContent = !$scope.toggleContent;
+    }
+
+
+    //刷新页面
+    $scope.refresh = function() {
+        getArticleDetail();
+        $scope.toggleContent = !$scope.toggleContent;
+        $scope.showComment();
+    }
+
+
+
+    //评论
+    $scope.reply = function(){
+        if(notlogin()){
+            window.uexWindow.alert("","请先登录","确定");
+            window.uexWindow.open('account.html','0','account.html',11,'','','4');
+            return;
+        } else {
+            uexWindow.open("articleComment",0, "article_comment.html", 2,"","","4");
+        }
+    }
+
+
+    //是否已赞过文章
+    var hasSupportArticle = function(){
+        var supportArticle = localStorageServ.get("supportedArticleId");
+        if(supportArticle) {
+            var len = supportArticle.length;
+            for(var i=0; i<supportArticle.length; i++) {
+                if(supportArticle[i] == articleId) {
+                    $scope.hasSupport = true;
+                    return true; //已经赞过该文章
+                }
+            }
+            return false; //赞过的文章中未查找到该文章
+        } else {
+           return false;    //从未赞过
+        }
+
+    };
+    hasSupportArticle();
+
+
+    //赞
+    $scope.support = function(){
+        if(hasSupportArticle()) {
+            uexWindow.toast(0,5,'您已赞过^_^',2000);
+            return;
+        } else {
+            $http({
+                method: 'GET',
+                url: APP_ACTION.PRAISE_ARTICLE + articleId,
+                params: null
+            }).success(function (data) {
+                        console.log(data);
+                if(data.status == "ok") {
+                    $scope.hasSupport = true;
+                    $scope.articleDetail.praise_number = data.result.praise;
+                    uexWindow.toast(0,5,'赞成功！',2000);
+                    var supportArticle = localStorageServ.get("supportedArticleId") || [];
+                    localStorageServ.add("supportedArticleId", supportArticle.concat([articleId]));
+                }
+            }).error(function () {
+                uexWindow.toast(0,5,'网络异常,请稍后重试',3000);
+            });
+        }
+    }
+
+
+
+    //分享
+    $scope.openShare = function (){
+
+        //转到发送微博界面
+        var sendWeibo = function (p){
+            var appkey = '';
+            var url = encodeURIComponent('http://www.szyunkoo.com');
+            var title = encodeURIComponent($$("newsTitle").innerText);
+            var pic = encodeURIComponent($$("articleImg").getAttribute("src"));
+            if(p == 'sina'){
+                appkey = "182940576";
+            } else if(p == 'tx'){
+                appkey = "801377083";
+            }else if(p=='qzone'){
+                appkey=null;
+            }
+            localStorageServ.add("params" , {
+                "url": url,
+                "title": title,
+                "pic": pic,
+                "appkey": appkey
+            })
+            uexWindow.open("weibosend", "0", "weibosend.html", 2, "", "", "4", "275");
+        }
+
+        uexWindow.cbActionSheet = function(opId,dataType,data){
+            if(dataType==2){
+                switch(parseInt(data)){
+                    case 0:         //新浪
+                        sendWeibo('sina')
+                        break;
+                    case 1:         //腾讯
+                        sendWeibo('tx');
+                        break;
+                    case 2:         //腾讯
+                        sendWeibo('qzone');
+                        break;
+                }
+            }
+        }
+        uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+            uexWindow.toast("0","5","errorCode:" + errorCode + "\n"+"errorInfo:" + errorInfo,2000);
+        }
+        var arr = ["新浪微博","腾讯微博","QQ空间"];
+        uexWindow.actionSheet("分享至","取消", arr );
+    }
+
+})
+
+window.uexOnload = function(type){
+    angular.bootstrap(document,['defaultApp']);
+    if (!type) {
+        //
+    }
+    window.onorientationchange=window.onresize=function() {
+        zy_resize("content",0,$$("header").offsetHeight);
+    }
+}
+</script>
+</html>
+
+

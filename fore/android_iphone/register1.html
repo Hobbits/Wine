@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>普通用户注册</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-input.css">
+    <link rel="stylesheet" href="css/ui-img.css">
+    <link rel="stylesheet" href="css/ui-list.css">
+
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <script src="js/zy_control.js"></script>
+    <script src="js/module/jquery.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+    <script src="js/jquery.form.js"></script>
+    <script src="js/route.js"></script>
+    <link rel="stylesheet" href="css/font/css/fontello.css">
+    <style>
+        #imgid{
+            max-width: 100%;
+            max-height: 7em;
+        }
+        #choosePic{
+            display: none;
+            color: black;
+        }
+        #count{text-align: center;font-size: 0.7em;margin-bottom: 0.5em;}
+    </style>
+
+    <script type="text/javascript">
+        window.onload = function(){
+            $("#add_form").attr('action', APP_ACTION['USER_REGISTER']);
+        }
+        //异步提交
+        $(function () {
+            $("#add").click(function () {
+                $('#add_form').ajaxSubmit({
+                    success: function (d) {
+                        try{var d=JSON.parse(d);}catch(e){
+                            alert('服务器内部错误');
+                            return;
+                        }
+
+                        if(d.status=='ok'){
+                            alert('注册成功');
+                            try{
+                                uexWindow.close(1,250);
+                            }catch(e){
+//                                        window.location.href = 'account.html';
+                            }
+//                            window.uexWindow.open('account','0','account.html',2,'','','0');
+                        }else{
+                            alert(d.result);
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
+
+    
+</head>
+
+<body class="um-vp fixHeader" ontouchstart>
+    <div id="center_content"  class="up ub ub-ver">
+
+        <!--header开始-->
+        <header id="header" class="headerHeight">
+            <div class="headerInner">
+                <i class="lefticon" ontouchstart="zy_touch('btn-act1')" onclick="uexWindow.close('-1','250')"></i>
+                <i id="add" class="righticon"><span class="icon-ok"></span></i>
+                <h1 class="mid">注册普通会员</h1>
+            </div>
+        </header>
+        <div class="headerHeight"></div>
+        <!--header结束-->
+
+
+
+
+
+
+
+
+        <!--&lt;!&ndash;header开始&ndash;&gt;-->
+        <!--<div id="header" class="uh">-->
+            <!--<div class="umh015"></div>-->
+            <!--<div class="c-blu3 c-m2 t-wh uc-a uba us b-gra uinn6">-->
+                <!--<a class="btn btn-l btn-a ub ub-ac" ontouchstart="zy_touch('btn-act1')" onclick="uexWindow.close(1,250)">-->
+                    <!--<div class="ulim">返回</div>-->
+                <!--</a>-->
+                <!--<h1 class="ut ulev0 ut-s tx-c" id="title">用户注册</h1>-->
+				<!--&lt;!&ndash;按钮开始&ndash;&gt;-->
+                <!--<a id="add" ontouchstart="zy_touch('btn-act')" class="btn btn-r btn-n ub ub-ac">-->
+                    <!--<div class="ulim">确定</div>-->
+                <!--</a>-->
+<!--&lt;!&ndash;按钮结束&ndash;&gt;-->
+				<!---->
+            <!--</div>-->
+        <!--</div>-->
+        <!--&lt;!&ndash;header结束&ndash;&gt;-->
+        
+        <!--content开始-->
+        <div id="content" class="ub-f1 tx-l t-bla c-gra uinn2">
+
+            <!--用户注册-->
+            <form id="add_form" method="post" enctype="multipart/form-data">
+
+            <div class="uba b-gra c-wh uinn18">
+                <div id="count">已经有很多人注册了！</div>
+                    <div ontouchstart="zy_touch('btn-act')" class="uc-t ubb ub b-gra t-bla ub-ac umh4 lis">
+                        <div class="ut-s rpass tx-r">用&nbsp;户&nbsp;名:</div>
+                        <div class="ub-f1 tx-r t-gra umar-l">
+                            <div class="c-wh uc-n b-gra uinput uinn4">
+                                <input placeholder="请输入个人昵称！" id="user_name" name="user_name" type="text" class="uc-n ulev-3">
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div ontouchstart="zy_touch('btn-act')" class="uc-t ubb ub b-gra t-bla ub-ac umh4 lis">-->
+                        <!--<div class="ut-s rpass tx-r">真实姓名:</div>-->
+                        <!--<div class="ub-f1 tx-r t-gra umar-l">-->
+                            <!--<div class="c-wh uc-n b-gra uinput uinn4">-->
+                                <!--<input placeholder="亲，真实姓名叫什么" id="user_real_name" name="user_real_name" type="text" class="uc-n ulev-3">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div ontouchstart="zy_touch('btn-act')"  class="ub ubb b-gra t-bla ub-ac umh4 lis">
+                        <div class="ut-s rpass tx-r">密&nbsp;&nbsp;&nbsp;&nbsp;码:</div>
+                        <div class="ub-f1 tx-r t-gra umar-l">
+                            <div class="c-wh uc-n b-gra uinput uinn4">
+                                <input placeholder="请输入密码"  type="password" id="user_password" name="user_password" class="uc-n ulev-3">
+                            </div>
+                        </div>
+                    </div>
+                    <div ontouchstart="zy_touch('btn-act')" class="ub ubb b-gra t-bla ub-ac umh4 lis">
+                        <div class="ut-s rpass tx-r">确认密码:</div>
+                        <div class="ub-f1 tx-r t-gra umar-l">
+                            <div class="c-wh uc-n b-gra uinput uinn4">
+                                <input placeholder="请确认密码"  type="password" id="confirm_psw" name="confirm_psw" class="uc-n ulev-3">
+                            </div>
+                        </div>
+                    </div>
+                    <div ontouchstart="zy_touch('btn-act')"  class="ub ubb b-gra t-bla ub-ac umh4 lis">
+                        <div class="ut-s rpass tx-r">联系方式:</div>
+                        <div class="ub-f1 tx-r t-gra umar-l">
+                            <div class="c-wh uc-n b-gra uinput uinn4">
+                                <input placeholder="您的联系方式" id="user_contact" name="user_contact" type="text" class="uc-n ulev-3">
+                            </div>
+                        </div>
+                    </div>
+                <div ontouchstart="zy_touch('btn-act')"  class="uc-b ub t-bla ub-ac umh4 lis">
+                    <div class="ut-s rpass tx-r">上传头像:</div>
+                    <div class="ub-f1 tx-r t-gra umar-l">
+                        <div class="c-wh uc-n b-gra uinput uinn4">
+
+                            <a onclick="actionsheet()">
+                                <img id="imgid" src="images/add_photo.png"/>
+                            </a>
+                            <input class="uhide" type="number" id="random" name="random"/>
+                            <input class="uhide" type="hidden" name="user_type" value="普通会员"/>
+                            <div>
+                                <span id="imgmsg"></span>
+                                <div id="choosePic" ontouchstart="zy_touch('btn-act')" onclick="uploadpic()" class="btn uba b-bla uinn2 uinl c-m1">
+                                    上传</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <!--<input type="hidden" name = 'id' id = 'id' />-->
+                <!--
+                <div style="text-align: center">
+                    <input type="button" id="add" value="提交" />
+                    <input type="reset" value="重置" />
+                </div>
+                -->
+
+                
+            </form>
+
+        </div>
+
+
+
+    </div>
+</body>
+
+<script>
+zy_init();
+
+var getCount=function(){
+    $.ajax({
+        url: APP_ACTION.REGISTER_COUNT,
+        data: null,
+        method:'GET',
+        dataType:'json'
+    }).done(function(data) {
+                if(data){
+                    if(data.status=='ok' && data.result>=0 && data.result<=999999){
+                       $('#count').html('已经有'+data.result+'人注册了！');
+                    }else{
+                        uexWindow.toast(0, 5, data.result, 3000);
+                    }
+                }
+            });
+};
+
+var imgurl = "../images/add_photo.png";//默认图片url
+var logger= document.getElementById("imgmsg");
+
+var changeImgsrc=function(str){
+    imgurl=str;
+    document.getElementById("imgid").src=imgurl;
+    $("#choosePic").show();
+}
+
+
+var random=(function(){
+    var d=new Date();
+    return String(d.valueOf())+String(Math.ceil(Math.random()));
+    })();
+$("#random").prop('value',random);
+
+//显示log
+
+function setLog(msg){
+    logger.innerHTML=msg;
+}
+
+//弹出actionSheet
+function actionsheet(){
+    uexWindow.actionSheet("选择图片", "取消", ["照相机拍摄","本地文件"]);
+}
+//通过图片查看器查看图片
+function viewpic(){
+    var ar = new Array();
+    ar[0]=imgurl;
+    uexImageBrowser.open(ar);
+}
+
+//下载网络图片
+var dopCode=1;
+var inSavePath=null;
+function downloadurl(){
+    if(imgurl.indexOf("http://")==0 || imgurl.indexOf("https://")==0){
+        var q = imgurl.match(/.*\.(.*)/);
+        inSavePath = (new Date()).getTime()+"."+q[1];
+        uexDownloaderMgr.createDownloader(dopCode);
+    }else{
+        uexWindow.toast(0,5,"非网络图片",1000);
+    }
+}
+//上传图片
+var uploadHttp = APP_ACTION['UPLOAD_USERHEAD']+random;
+var uopCode =2;
+function uploadpic(){
+    if(imgurl.indexOf("http://")<0 || imgurl.indexOf("https://")<0)
+        uexUploaderMgr.createUploader(uopCode,uploadHttp);
+    else
+        uexWindow.toast(0,5,"非本地图片",1000);
+}
+
+window.uexOnload = function(){
+
+    uexWindow.cbActionSheet = function(opId,dataType,data){
+        switch(parseInt(data)){
+            case 0:
+                uexCamera.open();
+                break;
+            case 1:
+                uexImageBrowser.pick();
+                break;
+        }
+    }
+    uexWindow.cbPrompt=function(opId,dataType,data){
+        if(dataType==1){
+            var d = eval("("+data+")");
+            if(d.num=="0"){
+                if(d.value.indexOf('http://')>-1 || d.value.indexOf('https://')>-1){
+                    changeImgsrc(d.value);
+
+                }
+                else
+                    alert("网络URL错误");
+            }
+
+        }
+    }
+    uexCamera.cbOpen = function(opId,dataType,data){
+        if(dataType==0)
+        {
+            changeImgsrc(data);
+        }
+    };
+    uexImageBrowser.cbPick = function(opCode, dataType, data) {
+        if(dataType==0)
+        {
+            changeImgsrc(data);
+        }
+    };
+
+
+    uexFileMgr.cbExplorer = function(opId,dataType,data){
+        uexLog.sendLog(dataType);
+        if(dataType==0){
+            uexLog.sendLog(data);
+            changeImgsrc(data);
+            uexLog.sendLog(document.getElementById("imgid").src);
+        }
+    }
+    //****************下载回调***************
+    uexDownloaderMgr.cbCreateDownloader=function(opId,dataType,data){
+        uexDownloaderMgr.download(dopCode,imgurl,inSavePath,0);
+        setLog("开始下载图片");
+    }
+    uexDownloaderMgr.onStatus = function(opId,fileSize,percent,status){
+        if(status == 0)
+            setLog("下载进度："+percent+"%");
+        if(status == 1){
+            setLog("下载完成");
+            changeImgsrc(inSavePath);
+            uexDownloaderMgr.closeDownloader(dopCode);
+        }
+        if(status == 2){
+            setLog("下载出错");
+            uexDownloaderMgr.closeDownloader(dopCode);
+            uexFileMgr.deleteFileByPath(inSavePath);
+        }
+    }
+    //******************************************
+    //****************上传回调***************
+    uexUploaderMgr.cbCreateUploader = function(opId,dataType,data){
+        uexUploaderMgr.uploadFile(uopCode,imgurl,"filename",1);
+        setLog("开始上传图片");
+    }
+    uexUploaderMgr.onStatus = function(opId,fileSize,percent,serverPath,status){
+        if(status==0)
+            setLog("上传进度："+percent+"%");
+        if(status == 1){
+            setLog("上传完成");
+            uexUploaderMgr.closeUploader(uopCode);
+            $("#choosePic").hide();
+        }
+        if(status == 2){
+            setLog("上传出错");
+            uexUploaderMgr.closeUploader(uopCode);
+        }
+    }
+    //******************************************
+
+
+    getCount();
+}
+
+
+</script>
+</html>

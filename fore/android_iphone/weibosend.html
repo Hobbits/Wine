@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="defaultApp" class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>发送微博</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>    
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+
+</head>
+<body class="um-vp c-gra5 fixHeader" ontouchstart>
+    <div id="page_0" class="up ub ub-ver">
+        <!--header开始-->
+        <header id="header" class="headerHeight">
+            <div class="headerInner">
+                <i class="lefticon" ontouchstart="zy_touch('btn-act1')" templarlink="back" data-trans="1"></i>
+
+                <h1 class="mid">发送微博</h1>
+            </div>
+        </header>
+        <div class="headerHeight"></div>
+        <!--header结束-->
+
+
+
+
+
+        <!--content开始-->
+        <section id="content" class="ub-f1 tx-l t-bla">
+					
+        </section>
+        <!--content结束-->
+    </div>
+</body>
+<script src="http://qzonestyle.gtimg.cn/qzone/app/qzlike/qzopensl.js#jsdate=20111201" charset="utf-8"></script>
+<script>
+zy_init();
+
+window.uexOnload = function(type){
+    if (!type){
+         var params = localStorageServ.get("params");
+         var url = params['url'];
+         var title= params['title'];
+        var pic=params['pic'];
+         var appkey = params['appkey'] || null;
+         if(appkey == "182940576"){
+            uexWindow.openPopover('sinaWeiboShare', '0', "http://service.weibo.com/share/share.php?url="+url+"&title="+title+'&pic='+pic+"&appkey="+appkey, "", 0, $$("header").offsetHeight, "", "", "", "");
+         } else if(appkey == "801377083"){
+            uexWindow.openPopover('TXWeiboShare', '0', "http://share.v.t.qq.com/index.php?c=share&a=index&url="+url+"&title="+title+'&pic='+pic+"&appkey="+appkey,"", 0, $$("header").offsetHeight, "", "", "", "");
+         }else{
+             /*qq空间*/
+             (function(){
+                 var p = {
+                     url:url,
+                     showcount:'1',
+                     title:title,/*分享标题(可选)*/
+                     site:'塞拉维APP',/*分享来源 如：腾讯网(可选)*/
+                     pics:pic, /*分享图片的路径(可选)*/
+                     style:'203',
+                     width:98,
+                     height:22
+                 };
+
+
+                 var link="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url="+url+"&title="+title+"&pics="+pic+"&summary=";
+                 uexWindow.openPopover('qzoneShare', '0', link,"", 0, $$("header").offsetHeight, "", "", "", "");
+             })();
+         }
+    }
+	window.onorientationchange=window.onresize=function(){
+		zy_resize("content",0,$$("header").offsetHeight);				
+	}
+}
+
+</script>
+</html>

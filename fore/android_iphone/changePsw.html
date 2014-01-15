@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>修改密码</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-input.css">
+    <link rel="stylesheet" href="css/ui-img.css">
+    <link rel="stylesheet" href="css/ui-list.css">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <link rel="stylesheet" href="css/ui-res.css">
+    <script src="js/module/jquery.js"></script>
+    <script src="js/module/jQuery.ajaxSetup.js"></script>
+
+    <script src="js/jquery.form.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+    <style type="text/css">
+        .ui-grid-a {display:block; overflow:hidden;}
+        .ui-grid-a .ui-block-a {clear:left; float:left; width:50%;}
+        .ui-grid-a .ui-block-b {float:left; width:50%;}
+        .ui-grid-a .ui-block-a .ui-bar,
+        .ui-grid-a .ui-block-b .ui-bar
+        {display:block; clear:both; position:relative; overflow:hidden; }
+        .ui-grid-a .ui-block-a .ui-bar {margin-right:0.5em;}
+        .ui-grid-a .ui-block-b .ui-bar {margin-left:0.5em;}
+    </style>
+</head>
+<body class="um-vp c-gra5 fixHeader" ontouchstart>
+<div id="page_0" class="up ub ub-ver">
+
+    <!--header开始-->
+    <header id="header" class="headerHeight">
+        <div class="headerInner">
+            <i class="lefticon" ontouchstart="zy_touch('btn-act1')" onclick="uexWindow.close('-1','250')"></i>
+
+            <h1 class="mid">修改密码</h1>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+
+
+
+
+
+    <!--content开始-->
+    <div id="content" class="ub-f1 tx-l t-bla c-gra">
+        <!--登录-->
+        <div id="page_login" class="uinn18">
+            <form id="change" method="post">
+                <div class="uba b-gra c-wh us">
+                    <div class="uc-t ubb ub b-gra c-m2 t-bla ub-ac umh4 lis">
+                        <div class="ut-s">原始密码:</div>
+                        <div class="ub-f1 tx-r t-gra ulev-3 umar-l">
+                            <div class="c-wh uc-n b-gra uinput uinn4">
+                                <input id="userpassword" type="password" class="uc-n ulev0" name="userpassword"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uc-b c-m2 ub  t-bla ub-ac umh4 lis">
+                        <div class="ut-s">新密码:</div>
+                        <div class="ub-f1 tx-r t-gra ulev-3 umar-l">
+                            <div class="c-wh uc-n b-gra uinput uinn4">
+                                <input id="newpassword"  type="password" class="uc-n ulev0" name="newpassword"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input name="uid" id="uid" type="hidden" class="uhide"/>
+
+
+                <div ontouchstart="zy_touch('btn-act')" onclick="change();" class="btn uba b-gra uinn9 c-gra c-m7 t-bla">提交</div>
+            </form>
+
+        </div>
+    </div>
+    <!--content结束-->
+
+</div>
+</body>
+<script>
+    zy_init();
+    function change(){
+        $('#change').ajaxSubmit({
+            success:function(result,status){
+                try{
+                    var r = JSON.parse(result);
+                }catch(e){
+                    alert('服务器内部错误');
+                    return;
+                }
+
+                if(r.status=='ok'){
+                    uexWindow.alert("",'修改成功',"确定");
+                    uexWindow.close();
+                }else{
+                    uexWindow.alert("", r.result,"确定");
+                }
+
+            }
+
+        });
+        return false;
+    };
+
+
+
+
+
+
+    window.uexOnload = function(type){
+        var userInfo=localStorageServ.get('userInfo');
+        $('#uid').val(userInfo.id);
+        $('#change').attr('action',APP_ACTION.CHANGEPSW);
+    };
+</script>
+</html>

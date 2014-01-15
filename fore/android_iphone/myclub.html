@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="defaultApp" class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>我的空间</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+
+
+</head>
+<body class="um-vp c-gra5 fixHeader" ontouchstart>
+<div id="page_0" class="up ub ub-ver">
+    <!--header开始-->
+    <header id="header" class="headerHeight">
+        <div class="headerInner">
+            <i class="lefticon" ontouchstart="zy_touch('btn-act1')" templarlink="back" data-trans="1"></i>
+
+            <h1 class="mid">我的空间</h1>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+
+
+
+
+
+    <!--content开始-->
+    <section id="content" class="ub-f1 tx-l t-bla">
+请稍等……
+    </section>
+    <!--content结束-->
+</div>
+</body>
+
+<script>
+    zy_init();
+
+    window.uexOnload = function(type){
+        if (!type){
+
+
+        }
+
+        zy_con("content", "welife_con2.html?mine=1", 0, $$("header").offsetHeight);
+
+
+
+    }
+
+</script>
+</html>

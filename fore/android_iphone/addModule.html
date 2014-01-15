@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>添加模块</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/base-font/icon-base.css"/>
+    <link rel="stylesheet" href="css/font/css/fontello.css"/>
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+
+    <style>
+        .pa5{padding: 0.5rem}
+       .modItem{
+           display: block;height: 3.5em;
+           padding: 0.25em;
+           border-bottom: 1px solid #000000;
+       }
+
+        .modName,.modTag{
+            height: 100%;line-height: 3em;
+        }
+        .modName{float: left;}
+        .modTag{float: right;width: 3em;background: none;border: none;}
+
+        .modTag{
+            display: inline-block;
+
+            -webkit-transform-origin: center;
+            transform-origin: center;
+            transform:rotate(0deg);
+            -webkit-transform:rotate(0deg);
+
+            -webkit-transition: all 1s ease;
+            transition: all 1s ease;
+            color: green;
+        }
+        .modTag span:before{font-size: 1.5em;}
+        .ro45{
+            transform:rotate(45deg);
+            -webkit-transform:rotate(45deg);
+            color: #cd5c5c;
+        }
+    </style>
+
+</head>
+<body data-ng-controller="addModuleCtrl" class="um-vp c-wh fixHeader" ontouchstart>
+<div id="page_0" class="up ub ub-ver">
+    <!--header开始-->
+    <header id="header">
+        <div class="headerInner">
+            <i class="lefticon" templarlink="back" data-trans="1"></i>
+            <i id="add" ng-click="reset()" class="righticon">重置</i>
+            <h1 class="mid">编辑模块</h1>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+
+     <!--content开始-->
+    <section class="ub-f1 pa5">
+        <ul>
+            <li data-ng-repeat="dNav in dynamicNavs" class="modItem clearfix borderBox">
+                <div class="modName" ng-bind="dNav.name"></div>
+                <button data-ng-click="toggle($index)"
+                        ng-class="{'true':'ro45', 'false':''}[dNav.isShown]" class="modTag">
+                    <span class="icon-plus"></span>
+                </button>
+            </li>
+        </ul>
+    </section>
+    <!--content结束-->
+
+</div>
+</body>
+<script>
+zy_init();
+defaultApp.controller("addModuleCtrl",function($scope,$http){
+
+    $scope.reset=function(){
+        $http({
+            method: 'GET',
+            cache:false,
+            url: APP_ACTION['GET_CLUB_MODEL'],
+            params: null
+        }).success(function (data) {
+                    if(data.status == "ok" && ('search' in data.result[0])) {
+                        var nomalizerFactory=function(oriArr){
+                            for(var i in oriArr){
+                                oriArr[i].role='addon';
+                                oriArr[i].isShown=false;
+                            }
+                            return oriArr;
+                        };
+                        localStorageServ.add('dynamicNavs',nomalizerFactory(data.result));
+                        $scope.dynamicNavs=localStorageServ.get('dynamicNavs');
+                    }else{
+                        uexWindow.toast(0,5,data.result,3000);
+                    }
+                }).error(function () {
+                    uexWindow.toast(0,5,'获取会所列表失败！',3000);
+                });
+    };
+
+
+
+
+
+    $scope.IMAGE_ROOT = IMAGE_ROOT;
+
+    $scope.dynamicNavs=localStorageServ.get('dynamicNavs');
+
+
+    $scope.toggle=function(index){
+        console.log(index);
+        $scope.dynamicNavs[index].isShown=!$scope.dynamicNavs[index].isShown;
+        localStorageServ.add('dynamicNavs',$scope.dynamicNavs);
+    };
+
+
+});
+
+window.uexOnload=function(type) {
+    angular.bootstrap(document,['defaultApp']);
+}
+</script>
+</html>
+
+

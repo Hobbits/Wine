@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html ng-app="defaultApp" class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>讨论</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/base-font/icon-base.css"/>
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+</head>
+<body data-ng-controller="discussCtrl" class="um-vp c-wh fixHeader" ontouchstart>
+<div id="page_0" class="up ub ub-ver">
+    <!--header开始-->
+    <header id="header">
+        <div class="headerInner">
+            <i class="lefticon" templarlink="back" data-trans="1"></i>
+            <h1 class="mid">讨论</h1>
+        </div>
+    </header>
+    <div class="headerHeight"></div>
+    <!--header结束-->
+
+     <!--content开始-->
+    <section id="content" class="ub-f1 marginFooterHeight2">
+    </section>
+    <!--content结束-->
+
+    <footer class="footerNav commentFooter">
+        <form name="commentForm">
+            <div class="t-gra umar-l ufl comment-cont">
+                <div class="c-wh uc-n b-gra uinput">
+                    <input id="message" name="message" ng-model="message" placeholder="我的评论..." type="text" maxlength="150" class="uc-n ulev-3" required>
+                </div>
+            </div>
+            <button id="subBtn" class="subBtn icon-send ufl sub-comment" ng-click="addComment()" ng-disabled="commentForm.$invalid" ontouchstart="zy_touch('btn-act')"></button>
+        </form>
+    </footer>
+</div>
+</body>
+<script>
+zy_init();
+defaultApp.controller("discussCtrl",function($scope,$http){
+    var postId  = localStorageServ.get('postDetail').pid;
+    var subBtn = document.getElementById("subBtn");
+    var addCommenAct = function(){
+        $http({
+            method: 'POST',
+            url: APP_ACTION['SEND_COMMENT']+postId,
+            data: { "message" : $scope.message }
+        }).success(function (data) {
+                    if(data.status=="ok"){
+                        $scope.message = "";
+                        uexWindow.toast(0, 5, data.result, 3000);
+                        uexWindow.evaluatePopoverScript('', 'content', 'getPost()');
+
+//                        uexWindow.evaluatePopoverScript('','content',uexWindow.closePopover("content"));
+//                        zy_con("content", "post_con.html", 0, $$("header").offsetHeight);
+                    }else{
+                        uexWindow.toast(0, 5, data.result, 3000);
+                    }
+                    subBtn.removeAttribute("disabled");
+                })
+                .error(function () {
+                    subBtn.removeAttribute("disabled");
+                    uexWindow.toast(0, 5, "网络异常，请稍后重试", 3000);
+                });
+    }
+
+    $scope.addComment = function(){
+        if(notlogin()){
+            window.uexWindow.alert("","请先登录","确定");
+            window.uexWindow.open('account.html','0','account.html',11,'','','4');
+           return;
+        } else {
+            subBtn.setAttribute("disabled", "disabled");
+            addCommenAct();
+        }
+    }
+})
+
+window.uexOnload = function(type){
+//    angular.bootstrap(document,['defaultApp']);
+    if (!type) {
+        zy_con("content", "post_con.html", 0, $$("header").offsetHeight);
+    }
+    window.onorientationchange=window.onresize=function(){
+        zy_resize("content",0,$$("header").offsetHeight);
+    }
+}
+</script>
+</html>
+
+

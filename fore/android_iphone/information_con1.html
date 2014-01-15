@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>发现</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/module/filters.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+</head>
+<body data-ng-controller="info1Ctrl" class="um-vp" ontouchstart>
+     <!--content开始-->
+    <section id="content" class="ub-f1">
+        <ul>              
+            <li class="ub umh7 infolist" data-ng-repeat="information in informations" ng-class="{infoborder: !$last}" go-to-Article="{{information.aid}}">
+                <div class="umw4 ulpic us">
+                    <div class="uabs2">
+                        <img ng-src="{{IMAGE_ROOT + information.picture}}" class="inforpic1">
+                    </div>
+                </div>
+                <div class="ub-f1 ub ub-ver">
+                    <h3 class="infotitle" ng-cloak>{{information.title | ellipsisText}}</h3>
+                    <div class="tx-r infotime" ng-cloak>
+                        {{ information.createtime }}
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <!--content结束-->
+
+<script>
+zy_init();
+defaultApp.controller("info1Ctrl",function($scope,$http){
+    $scope.IMAGE_ROOT = IMAGE_ROOT;
+    $scope.informations=[];
+    var pageNum=1;
+    var loadpage=function(pnum){
+        var limit=10;
+        $http({
+            method: 'GET',
+            url: APP_ACTION['GET_INFORMATION_FIND']+pnum+'/'+limit,
+            params: null
+        }).success(function (data) {
+            if(data.status=='ok' && angular.isArray(data.result)){
+                $scope.informations = $scope.informations.concat(data.result);
+                if(data.result.length>0){
+                    if(data.result.length>=limit){
+                        pageNum=pnum;
+                    }else{
+                        pageNum++;
+                    }
+                }
+            }else{
+                uexWindow.toast(0, 5, data.result, 3000);
+            }
+        })
+        .error(function () {
+             uexWindow.toast(0, 5, '获取信息失败！', 3000);
+        });
+    };
+    loadpage(pageNum);
+
+    /**
+     * 设置弹动属性
+     */
+    function set_bounce(){
+        uexWindow.setBounce("1");
+        setUpstyle("下拉刷新");
+        uexWindow.showBounceView("1","rgba(142,201,96,30)","0");
+        uexWindow.notifyBounceEvent('1','1');
+        uexWindow.onBounceStateChange = function(type,state){
+
+            if(type == '1' && state == "2"){
+                loadData();
+            }
+        }
+    };
+    set_bounce();
+    function loadData(){
+        uexWindow.toast(1,5,"loading....",2000);
+        loadpage(pageNum+1);
+
+        //2秒后，恢复弹动初始状态
+        setTimeout(function(){uexWindow.resetBounceView('1');},2000);
+    }
+    function setUpstyle(ltext){
+        var json_p = '{"imagePath":"res://refresh_upicon.png","textColor":"#000","levelText":"'+ltext+'","pullToReloadText":"下拉可以刷新","releaseToReloadText":"松开即可刷新","loadingText":"正在刷新中..."}';
+        uexWindow.setBounceParams('1',json_p);
+    }
+});
+
+window.uexOnload=function(type) {
+    angular.bootstrap(document,['defaultApp']);
+    if(!type){
+        uexWindow.setBounce("1");
+        uexWindow.showBounceView("0","#FFF","0");
+        uexWindow.showBounceView("1","#FFF","0");
+    }
+}
+</script>
+</body>
+</html>
+

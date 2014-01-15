@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>文章评论</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+</head>
+<body data-ng-controller="articleCommentCtrl" class="um-vp c-wh fixHeader" ontouchstart>
+
+<!--header开始-->
+<header id="header" class="headerHeight">
+    <div class="headerInner">
+        <i class="lefticon" templarlink="back" data-trans="1"></i>
+        <h1 class="mid">文章评论</h1>
+        <button id="subBtn" class="righticon subBtn" ontouchstart="zy_touch('btn-act1')" ng-click="addComment()">发送</button>
+    </div>
+</header>
+<div class="headerHeight"></div>
+<!--header结束-->
+
+<section id="content" class="ub-f1">
+
+    <div class="uc-t ubb ub b-gra t-bla ub-ac umh4 lis umar-t">
+        <div class="ub-f1 tx-r t-gra">
+            <div class="c-wh uc-n b-gra uinput uinn4">
+                <textarea rows="10" placeholder="请输入评论的内容..."
+                          name="comment_content" ng-model="comment_content"
+                          maxlength="150" required></textarea>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script>
+    zy_init();
+    defaultApp.controller("articleCommentCtrl",function($scope,$http,$timeout){
+        var articleId = localStorageServ.get("articleId");
+        var subBtn = document.getElementById("subBtn");
+        var addCommenAct = function(){
+            $http({
+                method: 'POST',
+                url: APP_ACTION.ADD_REVIEW + articleId,
+                data: {
+                    "type": 1,
+                    "comment_content" : $scope.comment_content
+                }
+            }).success(function (data) {
+                        if(data.status=="ok"){
+                            uexWindow.toast(0, 5, "评论成功", 1000);
+                            $timeout(function(){uexWindow.close();},1000)
+
+                        }
+                    })
+                    .error(function () {
+                        subBtn.removeAttribute("disabled");
+                        uexWindow.toast(0, 5, "网络异常，请稍后重试", 3000);
+                    });
+        }
+
+
+        $scope.addComment = function(){
+            if(notlogin()){
+                window.uexWindow.alert("","请先登录","确定");
+                window.uexWindow.open('account.html','0','account.html',11,'','','4');
+                return;
+            } else {
+                subBtn.setAttribute("disabled", "disabled");
+                addCommenAct();
+            }
+        }
+
+    })
+
+    window.uexOnload = function(type){
+        angular.bootstrap(document,['defaultApp']);
+        if (!type) {
+            //
+        }
+        window.onorientationchange=window.onresize=function() {
+            zy_resize("content",0,$$("header").offsetHeight);
+        }
+    }
+</script>
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>讨论</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/font/css/fontello.css"/>
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+    <script src="js/module/filters.js"></script>
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+
+</head>
+<body data-ng-controller="info3Ctrl" class="um-vp" ontouchstart>
+<!--content开始-->
+<section id="content" class="ub-f1">
+    <ul>
+        <li class="ubb b-gra2" data-ng-repeat="post in posts" data-ng-click="goPosterDetail({{ post}})">
+            <div class="ub uinn" >
+                <div class="umw7 ulpic2">
+                    <img data-ng-src="{{IMAGE_ROOT+post.user_head}}" class="inforpic4">
+                </div>
+
+                <div class="ub-f1 ub ub-ver">
+                    <h4 class="ulev0 info-discuss" ng-cloak>{{ post.subject }}</h4>
+                    <div class="ub ub-ac t-gra ulev-2 umar-t">
+                        <div class="icon-comment t-gra2 umar-r3" ng-cloak>{{ post.comment_num }}</div>
+                        <div class="icon-clock t-gra2" ng-cloak>{{ post.create_time }}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</section>
+<!--content结束-->
+
+<script>
+    zy_init();
+    defaultApp.controller("info3Ctrl",function($scope,$http){
+        $scope.IMAGE_ROOT = IMAGE_ROOT;
+        $scope.posts=[];
+        var pageNum=1;
+        var loadpage=function(pnum){
+            var limit=10;
+            $http({
+                method: 'GET',
+                url: APP_ACTION['GET_POST_LIST']+pnum+'/'+limit,
+                params: null
+            }).success(function (data) {
+                        console.log(data);
+                        if(data.status=='ok' && angular.isArray(data.result)){
+                            $scope.posts=$scope.posts.concat(data.result);
+                            if(data.result.length>0){
+                                if(data.result.length>=limit){
+                                    pageNum=pnum;
+                                }else{
+                                    pageNum++;
+                                }
+                            }
+                        }else{
+                            uexWindow.toast(0, 5, data.result, 3000);
+                        }
+                    })
+                    .error(function (data, status, headers, config) {
+                        uexWindow.toast(0, 5, '信息获取失败！', 3000);
+                    });
+        };
+        loadpage(pageNum);
+
+
+        $scope.goPosterDetail=function(o){
+            localStorageServ.add('postDetail',o);
+//            window.uexWindow.open('welife_PosterDetail.html','0','welife_PosterDetail.html','2','','','0');
+            uexWindow.open("post",0, "post.html", 2,"","","4");
+        }
+
+        /**
+         * 设置弹动属性
+         */
+        function set_bounce(){
+            uexWindow.setBounce("1");
+            setUpstyle("下拉刷新");
+            uexWindow.showBounceView("1","rgba(142,201,96,30)","0");
+            uexWindow.notifyBounceEvent('1','1');
+            uexWindow.onBounceStateChange = function(type,state){
+
+                if(type == '1' && state == "2"){
+                    loadData();
+                }
+            }
+        };
+        set_bounce();
+        function loadData(){
+            uexWindow.toast(1,5,"loading....",2000);
+            loadpage(pageNum+1);
+
+            //2秒后，恢复弹动初始状态
+            setTimeout(function(){uexWindow.resetBounceView('1');},2000);
+        }
+        function setUpstyle(ltext){
+            var json_p = '{"imagePath":"res://refresh_upicon.png","textColor":"#000","levelText":"'+ltext+'","pullToReloadText":"下拉可以刷新","releaseToReloadText":"松开即可刷新","loadingText":"正在刷新中..."}';
+            uexWindow.setBounceParams('1',json_p);
+        }
+    })
+
+    window.uexOnload=function(type) {
+        angular.bootstrap(document,['defaultApp']);
+        if(!type){
+            uexWindow.setBounce("1");
+            uexWindow.showBounceView("0","#FFF","0");
+            uexWindow.showBounceView("1","#FFF","0");
+        }
+    }
+</script>
+</body>
+</html>

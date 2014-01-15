@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>首页</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-btn.css">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/ui-color.css">
+    <link rel="stylesheet" href="css/base-font/icon-base.css"/>
+
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/hammer.min.js"></script>
+
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/zy_slide.js"></script>
+    <script src="js/route.js"></script>
+    <style>
+        #startBox {z-index:1000;}
+        #startImg {
+            /*此处地址要修改！SERVER_ROOT+images/image.php */
+            background:url('http://putaoshu.sqapp.cn/index.php/Article/get_start_pic') no-repeat center center;
+            /*background:url('https://wine-yunku.rhcloud.com/index.php/article/get_start_pic') no-repeat center center;*/
+            background-size: cover; -webkit-background-size: cover;
+        }
+        html,body {
+            top:0;bottom: 0;left: 0;right: 0;
+            background: url("images/bg.jpg") 50% 50% repeat-x #000000;
+            background-attachment:fixed;
+            -webkit-background-size: cover;
+            background-size: cover;
+           position: absolute;
+            overflow: hidden;
+        }
+        body{position: relative}
+        #movebg{
+            background-position-x:50%;
+
+            /*-moz-transition: background-position 0.3s;*/
+            /*-webkit-transition: background-position 0.3s;*/
+            /*transition: background-position 0.3s;*/
+        }
+        @media (orientation:landscape) {
+            #movebg{
+                background-position-x:0 !important;
+            }
+        }
+
+        .my_navbar01 {position:absolute; top:10%; right:6%; list-style:none; z-index:999; }
+
+        .my_navbar {position:absolute; bottom: 10%; right:9%; list-style:none; z-index:999; }
+        .my_navbar li {margin-top:0.5em;}
+        .my_navbar01 img {
+            width:3em;
+            height:3em;
+        }
+        .my_navbar img{
+            width:1.8em;
+            height:1.8em;
+        }
+        @keyframes fade {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        @-webkit-keyframes fade{
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        #tip {
+            position: absolute;
+            bottom: 32px;
+            width: 100%;
+            text-align: center;
+            color: #FFF;
+            font-weight: bold;
+            animation-name: fade;
+            animation-duration: 4s;
+            animation-timing-function: ease-in;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+
+            -webkit-animation-name: fade;
+            -webkit-animation-duration: 4s;
+            -webkit-animation-timing-function: ease-in;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-direction: alternate;
+        }
+
+            /* .login {position:absolute; top:16%; left:80%; }            */
+        #slider{
+            height: 100%;
+            width:100%;
+            position: absolute;
+        }
+
+        .blockPages {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            padding: 10% 10% 5% 10%;
+        }
+        .rows{
+            position: relative;
+            height: 23%;
+            /*padding-left: 10%;*/
+            margin-bottom: 0.4em;
+        }
+        .naver{
+            height: 23%; width: 34%;
+            margin:0 0.4em 0.4em 0;
+            display: inline-block;
+            vertical-align:top;
+        }
+        .naver a{width: 100%;
+            height: 100%;
+            display: block;}
+        .naver .main {
+            width: 100%;
+            height: 100%;
+            font-size: 1em;
+            color: #FFF;
+            font-weight: 600;
+            white-space:nowrap;
+            display: block;
+            text-align: center;
+            line-height: 4em;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .naver [class^="icon-"]:before,.naver [class*=" icon-"]:before,.addonIndex {
+            font-size: 2.5em;
+            display: block;
+            width: 100%;
+            text-align: center;
+            line-height: 25%;
+            margin-right: 0em;
+            margin-left: 0em;
+            padding-top: 30%;
+            color: #FFF;
+        }
+
+        @font-face {
+            font-family: 'ALGER';
+            src: url('css/font/font/ALGER.eot') format('eot'),
+            url('css/font/font/ALGER.woff') format('woff'),
+            url('css/font/font/ALGER.ttf') format('truetype'),
+            url('css/font/font/ALGER.svg') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        }
+        .addonIndex{font-family: "ALGER"}
+
+
+        /* 窗口宽度在480px以下 */
+        /*@media screen and (max-width:300px){*/
+             /*.naver span{font-size:0.8em}*/
+        /*}*/
+        /*@media screen  and (min-width: 301px) and (max-width:480px){*/
+             /*.naver span{font-size:1em}*/
+        /*}*/
+        /* 窗口宽度在480px以上、768px以下 */
+        /*@media screen and (min-width: 481px) and (max-width: 767px){*/
+             /*.naver span{font-size:1.5em}*/
+        /*}*/
+        /* 窗口宽度在768pxpx以上 */
+        /*@media (min-width: 768px) {*/
+             /*.naver span{font-size:1.8em}*/
+        /*}*/
+
+        .addons{position: relative;}
+        .addons .delete{
+            display: none;
+            background: none;border: none;margin: 0;padding: 0;
+            position: absolute;top:0;right: 0;
+            color: #FFF;width: 15%;height: 15%;
+            border-radius: 7.5%;
+            padding: 0.2em;
+            background-color: rgba(5, 176, 222,0.5);
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: pointer;
+        }
+        .addons.edit{
+            -webkit-transform:scale(1.1);
+            transform:scale(1.1);
+        }
+        .addons.edit .delete{
+            display:-webkit-box;
+            display:box;
+        }
+    </style>
+
+</head>
+
+<body class="um-vp c-wh" id="movebg" data-ng-controller="indexCtrl">
+<div class="up ub" id="startBox">
+    <div id="start" class="ub-con ub"><!--滑块-->
+        <div class="ub-fh" id="startImg">
+            <div id="tip">上滑可进入首页</div>
+        </div>
+    </div>
+</div>
+<div id="page_0" class="up ub ub-ver" tabindex="0">
+    <!--content开始-->
+
+    <style id="styleWriter"></style>
+    <div id="content" class="ub-f1"><!--容器-->
+        <div id="slider" class="ub" ><!--滑块-->
+
+            <div data-ng-repeat="blocks in addonList" class="ub-fh blockPages"><!--分页1-->
+                 <!--<div class="rows">-->
+                <div class="naver" data-ng-repeat="navs in blocks" data-ng-switch="navs.role">
+                    <a data-ng-switch-when="stat" style="background-color:{{navs.bg}};"
+                        templarlink="{{navs.link}}" data-search="t={{navs.search}}" data-trans="2" data-needlogin="{{navs.needlogin}}">
+                           <span class="main {{navs.icon}}" ng-bind-html="navs.name"></span>
+                    </a>
+
+                    <a data-ng-switch-when="addon" class="addons" taphold="edit" style="background-color:{{navs.bg}};">
+                        <div goclub="{{navs.search}}">
+                        <span class="addonIndex" ng-bind="navs.addindex+1"></span>
+                        <span class="main {{navs.icon}}" ng-bind-html="navs.name"></span>
+                        </div>
+                        <div ng-click="delete({{navs.search}})" class="delete flexbox-center">x</div>
+                    </a>
+
+                    <a data-ng-switch-when="addbtn" style="background-color:{{navs.bg}};">
+                        <span templarlink="{{navs.link}}" data-trans="2"
+                              class="main {{navs.icon}}" ng-bind-html="navs.name"></span>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+
+        <ul class="my_navbar01">
+            <li>
+                <a ng-click="logon()" data-trans="2">
+                    <img ng-src="{{headurl}}" />
+                </a>
+            </li>
+        </ul>
+        <ul class="my_navbar">
+            <li>
+                <a templarlink="shop.html">
+                    <img src="images/04.png" />
+                </a>
+            </li>
+            <li>
+                <a templarlink="account.html" data-trans="11" data-needlogin="true">
+                    <img src="images/02.png" />
+                </a>
+            </li>
+
+            <li>
+                <a templarlink="addModule.html" data-trans="2">
+                    <img src="images/03.png" />
+                </a>
+            </li>
+            <!--<li class="news"><a href="#"><img src="images/04.png" /></a><span><img src="images/news.png"/></span></li>-->
+        </ul>
+
+        <!--<div class="login"><a href="#"><img src="images/c.png" /></a></div>-->
+    </div>
+    <!--content结束-->
+</div>
+</body>
+<script>
+    zy_init();
+    //        document.addEventListener("touchmove",function(e){
+    //            var x=e.changedTouches[0].pageX;
+    //        })
+
+    defaultApp.directive("taphold", function() {
+        return {
+            restrict: "A",
+            link: function(scope, element, attrs) {
+                Hammer(element[0]).on("hold", function(event) {
+                    element.addClass(attrs['taphold']);
+                })
+            }
+        }
+    });
+
+    defaultApp.directive("goclub", function() {
+        return {
+            restrict: "A",
+            link: function(scope, element, attrs) {
+                var clubid=attrs['goclub'];
+                Hammer(element[0]).on("tap", function(event) {
+                   uexWindow.open("clubDetail.html",0, "club_detail.html?id="+clubid, 2,"","","4");
+
+                })
+            }
+        }
+    })
+
+    defaultApp.controller("indexCtrl",function($scope,$timeout,$http){
+        var getuInfo=function(){
+            return localStorageServ.get('userInfo');
+        }
+        var getUhead=function(o){
+            var userInfo=o || getuInfo();
+            var url='images/01.png';
+                if(userInfo && userInfo.user_head){
+                    $scope.headurl =IMAGE_ROOT+userInfo.user_head;
+                }else{
+                    $scope.headurl=url;
+                };
+        };
+        uexWindow.onStateChange = function(state){
+            if(state == 0){
+                $scope.$apply(function(){
+                    getUhead();
+                    getdynavs();
+                });
+            }
+        };
+
+        getUhead();
+
+
+        $scope.logon=function(){
+            if(!getuInfo()){
+                window.uexWindow.open('account.html','0','account.html',11,'','','4');
+            }
+        };
+
+
+        /*分页控制*/
+
+
+
+           $scope.staticNavs=[
+                {role:'stat',name:'塞拉唯',bg:'#2E8BEF',link:'album.html',search:'tree',icon:'icon-vine'},
+                {role:'stat',name:'主题空间',bg:'#3FB23F',link:'club_list.html',icon:'icon-theme-club'},
+                {role:'stat',name:'空间社区',bg:'#F2705F',link:'welife.html',icon:'icon-micro-life',needlogin:true},
+                {role:'stat',name:'服务平台',bg:'#E25099',link:'information.html',icon:'icon-message'},
+                {role:'stat',name:'空间作品',bg:'#613DBC',link:'shop.html',icon:'icon-jm-store'},
+                {role:'stat',name:'多元服务',bg:'#DD4F17',link:'multiService.html',icon:'icon-multi-service'},
+                {role:'stat',name:'我的空间',bg:'#00A400',icon:'icon-my-club',link:'myclub.html'},
+                {role:'stat',name:'心灵花园',bg:'#24BECE',link:'soulGarden.html',icon:'icon-mind-garden'},
+                {role:'stat',name:'荐<sup>+</sup>',bg:'#3FB23F',link:'recommend.html',icon:'icon-jian'},
+                {role:'stat',name:'衣<sup>+</sup>',bg:'#9C59A0',link:'album.html',search:'wear',icon:'icon-yi'},
+                {role:'stat',name:'食<sup>+</sup>',bg:'#554398',link:'album.html',search:'eat',icon:'icon-chi'},
+                {role:'stat',name:'文<sup>+</sup>',bg:'#F2705F',link:'album.html',search:'cult',icon:'icon-wen'}
+            ];
+
+        var groupingFactory=function(list){
+
+            var isonDeckFilter = function (propName) {
+                if('role' in propName){
+                    return propName.role=='stat' || propName.role=='addbtn' || propName.isShown;
+                }else{
+                    return false;
+                }
+
+            };
+
+            var newlist=[];
+            var addindex=0;
+            for(var index in list){
+                if(isonDeckFilter(list[index])){
+                    if(list[index].isShown){
+                        list[index].addindex=addindex;addindex++;
+                    }
+                    newlist.push(list[index]);
+                }
+            }
+            newlist.push({name:'<sup>+</sup>',role:'addbtn',bg:'rgba(255,255,255,0.4)',link:'addModule.html',icon:'myicon-plus'});
+            var finallist=$scope.staticNavs.concat(newlist);
+            return finallist.chunk(8);
+        };
+        $scope.dynamicNavs=[];
+
+        var getdynavs=function(){ /*刷新动态模块*/
+            var setScope=function(v){
+              $scope.dynamicNavs=v || localStorageServ.get('dynamicNavs');
+
+            }
+            if(localStorageServ.get('dynamicNavs')){
+                setScope();
+            }else{
+                $http({
+                    method: 'GET',
+                    url: APP_ACTION['GET_CLUB_MODEL'],
+                    params: null
+                }).success(function (data) {
+                            if(data.status == "ok" && ('search' in data.result[0])) {
+                                var nomalizerFactory=function(oriArr){
+                                    for(var i in oriArr){
+                                        oriArr[i].role='addon';
+                                        oriArr[i].isShown=false;
+                                    }
+                                    return oriArr;
+                                };
+
+                                setScope(nomalizerFactory(data.result));
+                            }else{
+                                uexWindow.toast(0,5,data.result,3000);
+                            }
+                        }).error(function () {
+                            uexWindow.toast(0,5,'获取会所列表失败！',3000);
+                        });
+            }
+        };getdynavs();
+
+
+        var updateAddons=function(v){
+            $scope.addonList=groupingFactory(v);
+            localStorageServ.add('dynamicNavs',v);
+            setTimeout(function(){
+                $$("slider").slide.refresh();
+            },0);
+        }
+
+        $scope.$watch('dynamicNavs',updateAddons);
+
+
+        $scope.delete=function(id){
+            for(var index in $scope.dynamicNavs){
+                if($scope.dynamicNavs[index].search==id){
+                    $scope.dynamicNavs[index].isShown=false;
+                    break;
+                }
+            }
+            updateAddons($scope.dynamicNavs);
+        }
+
+
+        /*分页控制结束*/
+
+
+
+    })
+
+    window.uexOnload = function(type){
+                var blockWidth=document.body.clientWidth;
+        var blockHeight=document.body.clientHeight;
+//        $$('block1').style.width=blockWidth+'px';
+//        $$('block2').style.width=blockWidth+'px';
+//        $$('slider').style.width=blockWidth+'px';
+
+
+        angular.bootstrap(document,['defaultApp']);
+        $$('content').addEventListener('touchmove',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+        },false);
+        document.body.addEventListener('touchmove',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+        });
+        $$('content').addEventListener('click',function(e){
+            var cl=e.target.classList;
+            if(!cl.contains('main') && !cl.contains('delete')){
+           var nodelist=document.getElementsByClassName('edit');
+            for(var i in nodelist){
+                if(nodelist.length>0 && 'style' in nodelist[i]){
+                    nodelist[i].classList.remove('edit');
+                }
+            }
+            }
+        });
+
+
+        if(!type) {
+            var bgEle=document.getElementById("movebg");
+
+            (function(){
+                var navsWidth=(blockWidth*0.9)*0.34;
+                var navsHeight=(blockHeight*0.85)*0.23;
+                var dem=navsWidth>navsHeight ? navsHeight :navsWidth;
+                $$('styleWriter').innerHTML='.naver{width:'+dem+'px;height:'+dem+'px;}';
+            }());
+
+
+
+            var k=blockWidth/20;
+
+                    $$("slider").slide = new zySlide("slider","H",function(){}, false, function(e) {
+
+                    },function(cor){
+                        /*第六个参数，获取移动坐标*/
+                        if(cor){
+                            var bgmove=(cor/k)*(-1)+50;
+                            bgEle.style.backgroundPosition=bgmove+"%"+" center";
+                        }
+                    });
+
+
+
+
+
+            /*向上拉起*/
+            var pushUp={
+                minMoveHeight:document.body.clientHeight*0.1,
+                starter:$$("start"),
+                cor:0,
+                transendAct:function(){
+                    if(pushUp.cor>=pushUp.minMoveHeight){
+                        pushUp.starter.slide.destroy();
+                        setTimeout(function(){
+                            var startBox = $$('startBox');
+                            startBox.parentNode.removeChild(startBox);
+                        },500)
+
+                    }
+                }
+            }
+
+            pushUp.starter.slide = new zySlide("start","V",function(){
+
+            }, true, function(e) {
+
+            },function(cor){
+                pushUp.cor=Math.abs(cor);
+                if(pushUp.cor>=pushUp.minMoveHeight){
+                    pushUp.starter.style.webkitTransitionDuration = '500ms';
+                    pushUp.starter.style.webkitTransform = getTranslateY(document.body.clientHeight*(-1));
+                    pushUp.transendAct();
+
+                }
+            });
+
+            /*向上拉起结束*/
+
+        };
+
+
+        uexWidgetOne.cbGetPlatform = function (opId,dataType,data){
+            window.isAndroid=data;
+            localStorageServ.add("platform", data); //data为0表示IOS，为1是表示andiroid
+        }
+        setTimeout(function(){uexWidgetOne.getPlatform();},1000);//获取平台信息
+
+    }
+
+
+</script>
+
+</html>

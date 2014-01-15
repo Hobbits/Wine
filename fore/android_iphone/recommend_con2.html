@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class="headerbg um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title>精品阅读</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/ui-base.css">
+    <link rel="stylesheet" href="css/ui-box.css">
+
+    <script src="js/module/jquery.js"></script>
+    <script src="js/module/1.2.0/angular.min.js"></script>
+    <script src="js/module/1.2.0/angular-touch.min.js"></script>
+    <script src="js/module/1.2.0/angular-sanitize.min.js"></script>
+    <script src="js/module/1.2.0/directive1.2.js"></script>
+
+    <script src="js/module/localStorageServ.js"></script>
+
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/route.js"></script>
+    <style type="text/css">
+        .applyInfo h4 {color:#646464; margin-top: 0.3em;}
+        .im-download{ background-image: url('css/img/download.png');}
+    </style>
+</head>
+<body data-ng-controller="apply2Ctrl" class="um-vp" ontouchstart>
+
+<!--content开始-->
+<section id="content" class="ub-f1">
+    <div>
+        <ul>
+            <li data-ng-repeat="a in apply" class="ubb b-gra" ontouchstart=zy_touch('onbg') >
+            <div class="ub umh6 uinn ub-rev applyInfo" >
+                <div class="ub-img5 im-download newpic2 down_apply" data-index='{{$index}}' data-url="{{a.url}}"></div>
+                <div class="ub-f1 ub ub-ver">
+                    <div class="t-gra1 ulev-1 ub-f1 umar-t ulh maxh uof" style="word-wrap:break-word;" ng-cloak>{{a.shortdesc | ellipsisText:25 }}</div>
+                    <h4 class="t-bla ulev0 ut-s" ng-cloak>{{a.title}}</h4>
+                </div>
+                <div class="umw5 ulpic2">
+                    <img data-ng-src="{{IMAGE_ROOT + a.picture}}" class="inforpic3">
+                </div>
+            </div>
+
+
+            <div class="t-gra1 ulev-1 umar-t ulh uof" style="text-indent:2em;  display:none;">{{a.content | htmlToPlaintext}}</div>
+            </li>
+
+        </ul>
+        <div ng-if="noApply" ng-cloak class="uinn5 tx-c" style="background-color:rgba(247,188,62,0.4);">没有应用软件!</div>
+
+    </div>
+</section>
+<!--content结束-->
+
+</body>
+<script src="js/module/htmlToPlaintext.js"></script>
+<script src="js/module/filters.js"></script>
+<script>
+    zy_init();
+
+
+    window.uexOnload = function(type){
+        angular.bootstrap(document,['defaultApp']);
+        if (!type) {
+            //
+        }
+        window.onorientationchange=window.onresize=function(){
+            zy_resize("content",0,$$("header").offsetHeight);
+        }
+    }
+
+
+    defaultApp.controller("apply2Ctrl",function($scope, $http){
+        $scope.IMAGE_ROOT = IMAGE_ROOT;
+        $scope.apply=[];
+        var pageNum=1;
+        var loadpage=function(pnum){
+            var limit=10;
+            $http({
+                method: 'GET',
+                url: APP_ACTION['GET_APPLY02']+pnum+'/'+limit,
+                params: null
+            }).success(function (data) {
+                        if(data.status=='ok' && angular.isArray(data.result)){
+                            $scope.apply = $scope.apply.concat(data.result);
+                            if(data.result.length>0){
+                                if(data.result.length>=limit){
+                                    pageNum=pnum;
+                                }else{
+                                    pageNum++;
+                                }
+                            }
+                        }else if((data.status=="ok" && data.result.length==0)){
+                            $scope.noApply = true;
+                        } else{
+                            uexWindow.toast(0, 5, data.result, 3000);
+                        }
+                    })
+                    .error(function () {
+                        uexWindow.toast(0, 5, '获取信息失败！', 3000);
+                    });
+        };
+        loadpage(pageNum);
+
+        /**
+         * 设置弹动属性
+         */
+        function set_bounce(){
+            uexWindow.setBounce("1");
+            setUpstyle("下拉刷新");
+            uexWindow.showBounceView("1","rgba(142,201,96,30)","0");
+            uexWindow.notifyBounceEvent('1','1');
+            uexWindow.onBounceStateChange = function(type,state){
+
+                if(type == '1' && state == "2"){
+                    loadData();
+                }
+            }
+        };
+        set_bounce();
+        function loadData(){
+            uexWindow.toast(1,5,"loading....",2000);
+            loadpage(pageNum+1);
+
+            //2秒后，恢复弹动初始状态
+            setTimeout(function(){uexWindow.resetBounceView('1');},2000);
+        }
+        function setUpstyle(ltext){
+            var json_p = '{"imagePath":"res://refresh_upicon.png","textColor":"#000","levelText":"'+ltext+'","pullToReloadText":"下拉可以刷新","releaseToReloadText":"松开即可刷新","loadingText":"正在刷新中..."}';
+            uexWindow.setBounceParams('1',json_p);
+        }
+    })
+
+    $(document).on('click','.applyInfo',function(e){
+        if ($(this).next().css('display') == 'block') {
+            $(this).next().slideUp();
+        } else {
+            $(".applyInfo").next().slideUp();
+            $(this).next().slideDown();
+        }
+    });
+
+    var loadLink = function(url){
+        var appInfo = ''; //IOS: alipay://   andiroid: android.intent.action.VIEW
+        var filter = '';
+        var dataInfo = url.toLowerCase();
+        var pf = localStorageServ.get('platform');
+        if(pf==1){
+            appInfo = 'android.intent.action.VIEW';
+            filter = 'text/html';
+        }
+        if(dataInfo.indexOf('http://')<0){
+            dataInfo = 'http://'+dataInfo;
+        }
+        if(dataInfo.indexOf('https://')<0){
+            dataInfo = 'https://'+dataInfo;
+        }
+        uexWidget.loadApp(appInfo, filter, dataInfo);
+    }
+    var runbrowser = function(url){
+        var brsurl = url;
+        uexWindow.cbActionSheet = function(opId, dataType, data){
+            if(data=="0") loadLink(brsurl);
+        }
+
+        var arr = ['启动本地浏览器'];
+        uexWindow.actionSheet('', '取消', arr );
+    }
+
+    $(document).on('click', '.down_apply', function(e){
+        e.stopPropagation();
+        var target=e.target;
+        var url = target.dataset['url'];
+        runbrowser(url);
+    })
+
+</script>
+</html>
+
